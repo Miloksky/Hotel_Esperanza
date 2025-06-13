@@ -36,6 +36,7 @@ const createRoom = async(req, res) => {
             message: 'Habitación creada'
         });
     } catch(error) {
+        console.log(error)
         res.json({ error: 'Error al crear la habitación' });
     }
 };
