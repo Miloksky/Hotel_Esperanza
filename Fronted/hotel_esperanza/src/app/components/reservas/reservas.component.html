@@ -1,0 +1,8 @@
+<!-- reservar.component.html -->
+<form (ngSubmit)="reservar()" #formReserva="ngForm">
+  <input type="number" name="user_id" [(ngModel)]="reserva.user_id" required placeholder="ID Usuario">
+  <input type="number" name="habitacion_id" [(ngModel)]="reserva.habitacion_id" required placeholder="ID Habitación">
+  <input type="date" name="fecha_inicio" [(ngModel)]="reserva.fecha_inicio" required>
+  <input type="date" name="fecha_fin" [(ngModel)]="reserva.fecha_fin" required>
+  <button type="submit" [disabled]="formReserva.invalid">Reservar</button>
+</form>

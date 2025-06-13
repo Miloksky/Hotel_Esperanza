@@ -1,0 +1,23 @@
+<h2>Reservas</h2>
+<table>
+  <tr *ngFor="let r of reservas">
+    <td>{{ r.id }}</td>
+    <td>{{ r.user_id }}</td>
+    <td>{{ r.fecha_inicio }} - {{ r.fecha_fin }}</td>
+  </tr>
+</table>
+
+<h2>Habitaciones</h2>
+<ul>
+  <li *ngFor="let h of habitaciones">
+    Habitación #{{ h.id }} - {{ h.descripcion }}
+  </li>
+</ul>
+
+
+
+<input name="username" [(ngModel)]="username" #user="ngModel" required minlength="3">
+<div *ngIf="user.invalid && user.touched">
+  <small *ngIf="user.errors?.['required']">Este campo es obligatorio</small>
+  <small *ngIf="user.errors?.['minlength']">Mínimo 3 caracteres</small>
+</div>
