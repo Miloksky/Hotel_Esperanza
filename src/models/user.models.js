@@ -24,4 +24,16 @@ const addUser = async (name, email, password, phone, document)=>{
     return result;
  }
 
-module.exports = {addUser,findEmail}
+
+ const findById = async(id) => {
+    const select = "SELECT * FROM users WHERE id = ?";
+    const [result] = await pool.query(select,[id]);
+    if(result.length === 0){
+        return false;
+    }
+
+    return result;
+
+ }
+
+module.exports = {addUser,findEmail,findById}

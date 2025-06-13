@@ -75,6 +75,22 @@ const login = async (req,res) => {
 
 } 
 
+const getProfile = async (req,res) => {
+    const id = req.userLogin.id;
+
+    const foundUser = await userM.findById(id);
+    if(!foundUser){
+        return res.status(404).json({
+                msg:"usuario no encontrado"
+                });
+    }
+    res.status(200).json({
+        success: true,
+        data:  foundUser,
+    });
+    
+}
 
 
-module.exports = {registerUser,login}
+
+module.exports = {registerUser, login, getProfile}
