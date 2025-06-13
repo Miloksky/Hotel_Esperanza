@@ -91,6 +91,33 @@ const getProfile = async (req,res) => {
     
 }
 
+const editUser = async (req,res) => {
+    const {id} = req.params;
+    let {name, email, password, phone, document} = req.body;
+    phone = phone || null;
+    document = document || null;
+    if(Number(id) !== req.userLogin.id && req.userLogin.role !== "admin"){
+        return res.status(400).json({
+            msg:"no puedes modificar a otros usuarios"
+        });
+    }
+
+    password = bcrypt.hashSync(password,10);
+
+    const updatedUser = await userM.updateUser(id, name, email, password, phone, document);
+    if(!updatedUser){
+        return res.status(400).json({
+            msg : "no se ha podido actualizar el usuario"
+        });
+    }
+
+    res.status(200).json({
+        success : true,
+        data : updatedUser
+    })
+
+}
 
 
-module.exports = {registerUser, login, getProfile}
+
+module.exports = {registerUser, login, getProfile, editUser}

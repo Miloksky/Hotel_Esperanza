@@ -36,4 +36,16 @@ const addUser = async (name, email, password, phone, document)=>{
 
  }
 
-module.exports = {addUser,findEmail,findById}
+
+ const updateUser = async(id, name, email, password, phone, document) => {
+    const findAndUpdate = "UPDATE users SET name = ?, email = ?, password = ?, phone = ?, document = ? WHERE id = ?";
+
+    const [result] = await pool.query(findAndUpdate,[name, email, password, phone, document,id]);
+    if(result.affectedRows === 0){
+        return false
+    }
+    return result;
+ }
+ 
+
+module.exports = {addUser,findEmail,findById,updateUser}
