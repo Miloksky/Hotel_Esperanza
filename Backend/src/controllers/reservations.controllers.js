@@ -6,7 +6,7 @@ const getAllReservations = async(req, res) => {
     const [rows] = await db.query('SELECT * FROM reservas');
     res.json(rows);
   } catch(error) {
-    res.status(500).json({ error: 'Error al obtener las reservas' })
+    res.json({ error: 'Error al obtener las reservas' })
   }
 };
 
@@ -18,12 +18,12 @@ const createReservation = async(req, res) => {
       'INSERT INTO reservas (nombre, fecha_entrada, fecha_salida, habitacion_id) VALUES (?, ?, ?, ?)',
       [ nombre, fecha_entrada, fecha_salida, habitacion_id ]
     );
-    res.status(201).json({
+    res.json({
       id: result.insertId,
       message: 'Reserva creada con exito'
     });
   } catch(error) {
-    res.status(500).json({ error: 'Error al crear la reserva' });
+    res.json({ error: 'Error al crear la reserva' });
   }
 };
 

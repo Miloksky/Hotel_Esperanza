@@ -3,7 +3,7 @@ const { getAllReservations, createReservation } = require('../../controllers/res
 const router = express.Router();
 
 
-router.get('/', getAllReservations);
-router.post('/', createReservation)
+router.get('/reservations', getAllReservations);
+router.post('/create', createReservation)
 
 module.exports = router;
