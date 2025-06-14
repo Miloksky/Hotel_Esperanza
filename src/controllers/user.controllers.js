@@ -90,14 +90,15 @@ const getProfile = async (req,res) => {
     });
     
 }
-
+// posible cambio : ruta especial para cambiar contraseña, para no obligar al usuario a cambiarla siempre 
 const editUser = async (req,res) => {
     const {id} = req.params;
     let {name, email, password, phone, document} = req.body;
     phone = phone || null;
     document = document || null;
+
     if(Number(id) !== req.userLogin.id && req.userLogin.role !== "admin"){
-        return res.status(400).json({
+        return res.status(403).json({
             msg:"no puedes modificar a otros usuarios"
         });
     }
@@ -113,11 +114,35 @@ const editUser = async (req,res) => {
 
     res.status(200).json({
         success : true,
-        data : updatedUser
+        msg:"usuario actualizado correctamente"
     })
+
+}
+
+const deactivateUser = async(req,res)=>{
+    const {id} = req.params;
+     if(Number(id) !== req.userLogin.id && req.userLogin.role !== "admin"){
+        return res.status(403).json({
+            msg:"No tienes permiso para desactivar este usuario"
+        });
+    }
+    const deactivatedUser = await userM.changeStatus(id);
+
+    if(!deactivatedUser){
+        return res.status(400).json({
+            msg:"no se ha podido desactivar el usuario"
+        });
+    }
+
+    res.json({
+        success: true,
+        msg: "Usuario desactivado correctamente"
+
+    });
+
 
 }
 
 
 
-module.exports = {registerUser, login, getProfile, editUser}
+module.exports = {registerUser, login, getProfile, editUser, deactivateUser}

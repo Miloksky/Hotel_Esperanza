@@ -46,6 +46,16 @@ const addUser = async (name, email, password, phone, document)=>{
     }
     return result;
  }
+
+
+ const changeStatus = async (id) => {
+    const deactivate = "UPDATE users SET is_active = ? WHERE id = ?";
+    const [result] = await pool.query(deactivate,[0, id]);
+    if(result.affectedRows === 0){
+        return false;
+    }
+    return result;
+ }
  
 
-module.exports = {addUser,findEmail,findById,updateUser}
+module.exports = {addUser,findEmail,findById,updateUser,changeStatus}
