@@ -2,7 +2,7 @@ const pool = require("../config/connection");
 
 
 const findEmail = async (email)=>{
-    const EmailInDb = "SELECT * FROM users WHERE email = ?";
+    const EmailInDb = "SELECT * FROM users WHERE email = ? AND is_active = 1";
     const [result] = await pool.query(EmailInDb,[email]);
     if(result.length === 0){
         return false
@@ -26,7 +26,7 @@ const addUser = async (name, email, password, phone, document)=>{
 
 
  const findById = async(id) => {
-    const select = "SELECT * FROM users WHERE id = ?";
+    const select = "SELECT * FROM users WHERE id = ? AND is_active = 1";
     const [result] = await pool.query(select,[id]);
     if(result.length === 0){
         return false;
