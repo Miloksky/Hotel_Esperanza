@@ -8,5 +8,6 @@ router.post("/login",userC.login);
 router.get("/profile",checkToken,userC.getProfile);
 router.put("/update/:id",checkToken,userC.editUser);
 router.put("/deactivate/:id",checkToken,userC.deactivateUser);
+router.put("/reactivate/:id",checkToken,userC.reactivateUser);
 
 module.exports = router;

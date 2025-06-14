@@ -62,9 +62,8 @@ const login = async (req,res) => {
         const infoToken = {
             id: selectedUser[0].id,
             email: selectedUser[0].email,
-            rol: selectedUser[0].rol
+            role: selectedUser[0].role
         }
-
         const token = createToken(infoToken);
 
         res.status(200).json(token);
@@ -97,7 +96,7 @@ const editUser = async (req,res) => {
     phone = phone || null;
     document = document || null;
 
-    if(Number(id) !== req.userLogin.id && req.userLogin.role !== "admin"){
+    if(Number(id) !== req.userLogin.id && req.userLogin.role !== 'admin'){
         return res.status(403).json({
             msg:"no puedes modificar a otros usuarios"
         });
@@ -126,7 +125,7 @@ const deactivateUser = async(req,res)=>{
             msg:"No tienes permiso para desactivar este usuario"
         });
     }
-    const deactivatedUser = await userM.changeStatus(id);
+    const deactivatedUser = await userM.changeStatus(id,0);
 
     if(!deactivatedUser){
         return res.status(400).json({
@@ -143,6 +142,34 @@ const deactivateUser = async(req,res)=>{
 
 }
 
+const reactivateUser = async(req,res)=>{
+ try {
+       const {id} = req.params;
+        if(req.userLogin.role !== "admin"){
+        return res.status(403).json({
+            msg:"No tienes permiso para reactivar usuarios"
+        });
+    }
+
+    const reactivatedUser = await userM.changeStatus(id,1);
+     if(!reactivatedUser){
+        return res.status(400).json({
+            msg:"no se ha podido reactivar el usuario"
+        });
+    }
+
+    res.status(200).json({
+        success: true,
+        msg: "Usuario reactivado correctamente"
+
+    });
+ } catch (error) {
+    console.log(error);
+ }
 
 
-module.exports = {registerUser, login, getProfile, editUser, deactivateUser}
+}
+
+
+
+module.exports = {registerUser, login, getProfile, editUser, deactivateUser, reactivateUser}

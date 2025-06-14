@@ -19,7 +19,6 @@ const checkToken = (req, res, next) => {
     }
 
     req.userLogin = resulToken;
-
     next();
 }
 

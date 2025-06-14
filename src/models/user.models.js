@@ -48,9 +48,9 @@ const addUser = async (name, email, password, phone, document)=>{
  }
 
 
- const changeStatus = async (id) => {
-    const deactivate = "UPDATE users SET is_active = ? WHERE id = ?";
-    const [result] = await pool.query(deactivate,[0, id]);
+ const changeStatus = async (id,status) => {
+    const updateStatus = "UPDATE users SET is_active = ? WHERE id = ?";
+    const [result] = await pool.query(updateStatus,[status, id]);
     if(result.affectedRows === 0){
         return false;
     }
