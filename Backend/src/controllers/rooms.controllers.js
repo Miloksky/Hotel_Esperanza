@@ -1,73 +1,71 @@
-const db = require('../config/connection');
+const Room = require('../models/rooms.models');
 
-// Obtengo las habitaciones:
-const getAllRooms = async(req, res) => {
-    try{
-        const [rows] = await db.query('SELECT * FROM rooms');
-        res.json(rows);
-    } catch(error) {
-        res.json({ error: 'Error al obtener las habitaciones' });
-    }
-};
-
-// Obtener una habitacion por ID:
-const getRoomById = async(req, res) => {
-    try{
-        const [rows] = await db.query('SELECT * FROM rooms WHERE id = ?', [req.params.id]);
-        if (rows.length === 0) {
-            return res.json({ error: 'Habitación no encontrada' })
-        }
-        res.json(rows[0]);
-    } catch(error) {
-        res.json({ error: 'Error al obtener la habitación' })
-    }
-};
-
-// Crear una habitacion:
-const createRoom = async(req, res) => {
-    const { number, type, description, price, status } = req.body;
+// Obtener todas las habitaciones:
+const getAllRooms = async (req, res) => {
     try {
-        const [result] = await db.query(
-            'INSERT INTO rooms (number, type, description, price, status) VALUES (?, ?, ?, ?, ?)',
-            [number, type, description, price, status || 'available']
-        );
-        res.json({
-            id: result.insertId,
-            message: 'Habitación creada'
-        });
-    } catch(error) {
-        console.log(error)
-        res.json({ error: 'Error al crear la habitación' });
+        const rooms = await Room.getAllRoomsFromDb();
+        res.json(rooms);
+    } catch (error) {
+        console.error('Error al obtener todas las habitaciones:', error);
+        res.status(500).json({ error: 'Error interno del servidor al obtener las habitaciones' });
     }
 };
 
-// Actualizar una habitacion:
-const updateRoom = async(req, res) => {
-    const { number, type, description, price, status } = req.body;
-    try{
-        const [result] = await db.query(
-            'UPDATE rooms SET number = ?, type = ?, description = ?, price = ?, status = ? WHERE id = ?',
-            [number, type, description, price, status, req.params.id]
-        );
-        if(result.affectedRows === 0) {
-            return res.json({error: 'Habitación no encontrada'});
+// Obtener una habitación por ID:
+const getRoomById = async (req, res) => {
+    try {
+        const room = await Room.getRoomByIdFromDb(req.params.id);
+        if (!room) {
+            return res.status(404).json({ error: 'Habitación no encontrada' });
         }
-        res.json({message: 'Habitación actualizada'});
-    } catch(error) {
-        res.json ({error: 'Error al actualizar la habitación'});
+        res.json(room);
+    } catch (error) {
+        console.error('Error al obtener la habitación por ID:', error);
+        res.status(500).json({ error: 'Error interno del servidor al obtener la habitación' });
     }
 };
 
-// ELiminar una habitacion: 
-const deleteRoom = async(req, res) => {
-    try{
-        const [result] = await db.query('DELETE FROM rooms WHERE id = ?', [req.params.id])
-        if(result.affectedRows === 0) {
-            return res.json({error: 'Habitación no encontrada'})
-        };
-        res.json({message: 'Habitación eliminada'})
-    } catch(error) {
-        res.json({error: 'Error al eliminar la habitación'})
+// Crear una habitación:
+const createRoom = async (req, res) => {
+    const { number, type, description, price, available  } = req.body;
+    try {
+        const newRoomId = await Room.createRoomInDb(number, type, description, price, available );
+        res.status(201).json({
+            id: newRoomId,
+            message: 'Habitación creada exitosamente'
+        });
+    } catch (error) {
+        console.error('Error al crear la habitación:', error);
+        res.status(500).json({ error: 'Error interno del servidor al crear la habitación' });
+    }
+};
+
+// Actualizar una habitación:
+const updateRoom = async (req, res) => {
+    const { number, type, description, price, available  } = req.body;
+    try {
+        const affectedRows = await Room.updateRoomInDb(req.params.id, number, type, description, price, available );
+        if (affectedRows === 0) {
+            return res.status(404).json({ error: 'Habitación no encontrada para actualizar' });
+        }
+        res.json({ message: 'Habitación actualizada exitosamente' });
+    } catch (error) {
+        console.error('Error al actualizar la habitación:', error);
+        res.status(500).json({ error: 'Error interno del servidor al actualizar la habitación' });
+    }
+};
+
+// Eliminar una habitación:
+const deleteRoom = async (req, res) => {
+    try {
+        const affectedRows = await Room.deleteRoomFromDb(req.params.id);
+        if (affectedRows === 0) {
+            return res.status(404).json({ error: 'Habitación no encontrada para eliminar' });
+        }
+        res.json({ message: 'Habitación eliminada exitosamente' });
+    } catch (error) {
+        console.error('Error al eliminar la habitación:', error);
+        res.status(500).json({ error: 'Error interno del servidor al eliminar la habitación' });
     }
 };
 
