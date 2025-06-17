@@ -101,7 +101,6 @@ const editUser = async (req,res) => {
             msg:"no puedes modificar a otros usuarios"
         });
     }
-
     password = bcrypt.hashSync(password,10);
 
     const updatedUser = await userM.updateUser(id, name, email, password, phone, document);
