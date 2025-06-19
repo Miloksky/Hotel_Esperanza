@@ -101,4 +101,14 @@ const recalculateTotal = async (id)=>{
     console.log(result)
     return result[0].total;
 }
-module.exports = {createReservationId, findIdAndPriceByNumber, addReservation, deleteReservation, checkOverlap, getAll, getReservationByUserId, updateReservation, setTotalReservation,checkOverlapEdit,findReservationId,recalculateTotal}
+
+const deleteById = async (id) => {
+    const query = "DELETE FROM reservations WHERE id = ?";
+    const [result] = await pool.query(query,[id]);
+    if(result.affectedRows === 0){
+        return false;
+    }
+    return result
+}
+
+module.exports = {createReservationId, findIdAndPriceByNumber, addReservation, deleteReservation, checkOverlap, getAll, getReservationByUserId, updateReservation, setTotalReservation, checkOverlapEdit, findReservationId, recalculateTotal, deleteById}
