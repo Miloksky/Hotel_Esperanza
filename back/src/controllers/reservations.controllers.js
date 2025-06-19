@@ -112,12 +112,13 @@ const getAllreservations = async (req, res) => {
 
 const getReservationByUser = async (req, res) => {
   try {
-    //preguntar si es mejor Number(id)
-    if (req.userLogin.role !== "admin" && req.userLogin.role !== "client") {
+  
+    if (!req.userLogin.role) {
       return res.status(403).json({
         msg: "no tienes acceso a esta configuración",
       });
     }
+
     const { id } = req.params;
     const reservations = await reservationsM.getReservationByUserId(id);
     if (!reservations) {
