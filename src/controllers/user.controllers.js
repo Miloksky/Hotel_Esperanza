@@ -76,7 +76,11 @@ const login = async (req,res) => {
 
 const getProfile = async (req,res) => {
     const id = req.userLogin.id;
-
+    if(Number(id) !== req.userLogin.id){
+        res.status(403).json({
+            msg:"no puedes acceder a este perfil"
+        })
+    }
     const foundUser = await userM.findById(id);
     if(!foundUser){
         return res.status(404).json({
