@@ -1,0 +1,40 @@
+<div class="page-container">
+  <h1 class="hotel-title">Hotel Esperanza</h1>
+
+  <form class="reservation-form" (ngSubmit)="checkAvailability()">
+    <div class="form-group">
+      <label for="date">Fecha de reserva:</label>
+      <input
+        type="date"
+        id="date"
+        [(ngModel)]="selectedDate"
+        name="date"
+        required
+        class="input-field"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="guests">Número de personas:</label>
+      <select
+        id="guests"
+        [(ngModel)]="selectedGuests"
+        name="guests"
+        required
+        class="input-field"
+      >
+        <option *ngFor="let guest of guestOptions" [value]="guest">
+          {{ guest }}
+        </option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn-check">
+      Ver disponibilidad
+    </button>
+  </form>
+
+  <p class="availability-message" *ngIf="availabilityMessage">
+    {{ availabilityMessage }}
+  </p>
+</div>
