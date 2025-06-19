@@ -138,7 +138,7 @@ const getReservationByUser = async (req, res) => {
 
 const editReservation = async (req, res) => {
   try {
-    if (req.userLogin.role !== "admin" && req.userLogin.role !== "client") {
+    if (!req.userLogin.role) {
       return res.status(403).json({
         msg: "no tienes acceso a esta configuración",
       });
@@ -217,11 +217,31 @@ const editReservation = async (req, res) => {
       error,
     });
   }
+
 };
+  const deleteReservation = async(req,res)=>{
+    if (!req.userLogin.role) {
+      return res.status(403).json({
+        msg: "no tienes acceso a esta configuración",
+      });
+    }
+    const {id} = req.params;
+    const deletedReservation = await reservationsM.deleteById(id);
+    if(!deletedReservation){
+      return res.status(404).json({
+        msg:"No se ha podido eliminar la reserva"
+      });
+    }
+    return res.status(200).json({
+      msg:"Reserva eliminada"
+    });
+  }
+
 
 module.exports = {
   createRoomReservation,
   getAllreservations,
   getReservationByUser,
   editReservation,
+  deleteReservation,
 };
