@@ -9,13 +9,17 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",
+<<<<<<<< HEAD:back/package.json
+========
+    "cors": "^2.8.5",
+>>>>>>>> dev_adrian:Backend/package.json
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.1",
     "nodemon": "^3.1.10"
-  }
+  },
+  "description": ""
 }

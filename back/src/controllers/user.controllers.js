@@ -44,7 +44,6 @@ const registerUser = async (req,res) => {
 const login = async (req,res) => {
     try {
         const {email,password} = req.body;
-        console.log(email);
         const selectedUser = await userM.findEmail(email);
         if(!selectedUser){
             return res.status(400).json({
@@ -77,11 +76,7 @@ const login = async (req,res) => {
 
 const getProfile = async (req,res) => {
     const id = req.userLogin.id;
-    if(Number(id) !== req.userLogin.id){
-        res.status(403).json({
-            msg:"no puedes acceder a este perfil"
-        })
-    }
+
     const foundUser = await userM.findById(id);
     if(!foundUser){
         return res.status(404).json({
@@ -106,6 +101,7 @@ const editUser = async (req,res) => {
             msg:"no puedes modificar a otros usuarios"
         });
     }
+
     password = bcrypt.hashSync(password,10);
 
     const updatedUser = await userM.updateUser(id, name, email, password, phone, document);
