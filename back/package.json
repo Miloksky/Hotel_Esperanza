@@ -11,14 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",
-<<<<<<<< HEAD:Backend/package.json
     "cors": "^2.8.5",
-========
-<<<<<<<< HEAD:back/package.json
-========
-    "cors": "^2.8.5",
->>>>>>>> dev_adrian:Backend/package.json
->>>>>>>> dev:back/package.json
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
