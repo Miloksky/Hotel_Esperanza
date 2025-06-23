@@ -111,13 +111,7 @@ const deleteById = async (id) => {
     return result
 }
 const findAvailableRooms = async (start_date, end_date) => {
-  const select = `
-    SELECT * FROM rooms
-    WHERE id NOT IN (
-      SELECT room_id FROM reservation_rooms
-      WHERE NOT (? <= start_date OR ? >= end_date)
-    )
-  `;
+  const select = "SELECT * FROM rooms WHERE id NOT IN (SELECT room_id FROM reservation_rooms WHERE NOT (? <= start_date OR ? >= end_date))";
   const [result] = await pool.query(select, [end_date, start_date]);
   if(result.length === 0){
     return false
