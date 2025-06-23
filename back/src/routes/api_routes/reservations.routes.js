@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const reservationC = require("../../controllers/reservations.controllers");
-const checkToken = require("../../middleware/auth");
+const {checkToken }= require("../../middleware/auth");
 
 router.post("/create",checkToken,reservationC.createRoomReservation);
 router.get("/list",checkToken,reservationC.getAllreservations);
