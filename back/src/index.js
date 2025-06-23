@@ -1,21 +1,14 @@
-const express = require('express');
-const app = express();
+const express = require("express");
+const cors = require('cors');
 require('dotenv').config();
-const resourceRoutes = require('./routes/resource.routes');
-
-// Middlewares globales
-app.use(express.json());
-
-// Rutas
-app.use('/api/resources', resourceRoutes);
-
-// Puerto
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
-});
+const router = require("./routes/api_routes");
 
 
-// conexion ruta admin 
-const authRoutes = require('./routes/auth.routes');
-app.use('/api/auth', authRoutes);
+const server = express();
+server.use(cors())
+server.use(express.json());
+server.use("/",router);
+
+const PORT = 3000;
+server.listen(PORT,()=>{
+    console.log(`listening in port ${PORT}`)});
