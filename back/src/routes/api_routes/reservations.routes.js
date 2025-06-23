@@ -7,6 +7,7 @@ router.get("/list",checkToken,reservationC.getAllreservations);
 router.get("/list/:id",checkToken,reservationC.getReservationByUser);
 router.put("/edit/:id",checkToken,reservationC.editReservation);
 router.delete("/delete/:id",checkToken,reservationC.deleteReservation);
+router.post("/checkAvailability",reservationC.checkAvailability);
 
 
 

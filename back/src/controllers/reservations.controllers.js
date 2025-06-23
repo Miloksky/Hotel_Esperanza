@@ -237,6 +237,40 @@ const editReservation = async (req, res) => {
     });
   }
 
+  const checkAvailability = async (req, res) => {
+  try {
+    const { start_date, end_date, guests } = req.body;
+    if (invalidDates(start_date, end_date)) {
+      return res.status(400).json({ success: false, msg: "Las fechas son inválidas" });
+    }
+    if (checkInBeforeToday(start_date)) {
+      return res.status(400).json({ success: false, msg: "La fecha de entrada no puede ser anterior a hoy" });
+    }
+   
+
+    const roomsAvailable = await reservationsM.findAvailableRooms(start_date, end_date);
+    console.log(roomsAvailable)
+    if (!roomsAvailable) {
+      return res.status(200).json({ success: false, msg: "No hay habitaciones disponibles para esas fechas" });
+    }
+    let totalCapacity = 0;
+    let selectedRooms = [];
+    for (const room of roomsAvailable) {
+      totalCapacity += room.capacity;
+      selectedRooms.push(room);
+    }
+
+    if (totalCapacity >= guests) {
+      return res.status(200).json({ success: true, rooms: selectedRooms });
+    } else {
+      return res.status(200).json({ success: false, msg: "No hay suficientes habitaciones libres para ese número de personas" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, msg: "Error del servidor" });
+  }
+};
+
 
 module.exports = {
   createRoomReservation,
@@ -244,4 +278,5 @@ module.exports = {
   getReservationByUser,
   editReservation,
   deleteReservation,
+  checkAvailability
 };
