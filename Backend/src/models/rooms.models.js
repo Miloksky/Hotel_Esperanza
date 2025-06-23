@@ -1,5 +1,3 @@
-// models/room.model.js
-
 const db = require('../config/connection');
 
 class Room {

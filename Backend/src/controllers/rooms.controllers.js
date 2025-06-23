@@ -1,4 +1,6 @@
 const Room = require('../models/rooms.models');
+const bcrypt = require("bcrypt");
+const { createToken } = require("../utils/jwt");
 
 // Obtener todas las habitaciones:
 const getAllRooms = async (req, res) => {
@@ -26,10 +28,18 @@ const getRoomById = async (req, res) => {
 };
 
 // Crear una habitación:
+// añadir el middleware 
 const createRoom = async (req, res) => {
     const { number, type, description, price, available  } = req.body;
     try {
         const newRoomId = await Room.createRoomInDb(number, type, description, price, available );
+
+        if(req.userLogin.role !== 'admin'){
+        return res.status(403).json({
+            msg:"no puedes crear una habitación"
+        });
+    }
+
         res.status(201).json({
             id: newRoomId,
             message: 'Habitación creada exitosamente'
@@ -41,10 +51,19 @@ const createRoom = async (req, res) => {
 };
 
 // Actualizar una habitación:
+// añadir el middleware 
 const updateRoom = async (req, res) => {
     const { number, type, description, price, available  } = req.body;
+
     try {
         const affectedRows = await Room.updateRoomInDb(req.params.id, number, type, description, price, available );
+
+        if(req.userLogin.role !== 'admin'){
+        return res.status(403).json({
+            msg:"no puedes modificar esta habitación"
+        });
+    }
+
         if (affectedRows === 0) {
             return res.status(404).json({ error: 'Habitación no encontrada para actualizar' });
         }
