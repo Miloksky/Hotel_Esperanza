@@ -1,21 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const resourceController = require('../../controllers/resources.controller');
-const { checkToken, authorizeAdmin } = require('../../middleware/auth');
-// rutas si fuera publico
-router.get('/', resourceController.getAllResources);
-router.post('/', resourceController.createResource);
-router.put('/:id', resourceController.updateResource);
-router.delete('/:id', resourceController.deleteResource);
 
-// rutas de este crud al que solo puede acceder un admin ya que es quien
+const {
+  getAllResources,
+  getResourceById,
+  createResource,
+  updateResource,
+  deleteResource,
+} = require('../../controllers/resources.controller');
+
+// Obtener todos los recursos
+router.get('/', getAllResources);
+
+// Crear un recurso
+router.post('/', createResource);
+
+// Actualizar un recurso por id
+router.put('/:id', updateResource);
+
+// Eliminar un recurso por id
+router.delete('/:id', deleteResource);
 
 
+//  solo uno 
+router.get('/:id', getResourceById);
 
-// // Rutas protegidas
-// router.get('/', authenticateToken, authorizeAdmin, resourceController.getAllResources);
-// router.post('/', authenticateToken, authorizeAdmin, resourceController.createResource);
-// router.put('/:id', authenticateToken, authorizeAdmin, resourceController.updateResource);
-// router.delete('/:id', authenticateToken, authorizeAdmin, resourceController.deleteResource);
 
 module.exports = router;
+
+
+
