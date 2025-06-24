@@ -1,0 +1,47 @@
+<div class="card-container">
+  <h1 class="reserva">Mis reservas</h1>
+  <h2 class="hotel-name">{{ reserva.hotelName }}</h2>
+
+  <div class="reservation-info">
+    <p><strong>Fecha check-in:</strong> {{ reserva.checkIn | date:'longDate' }}</p>
+    <p><strong>Fecha check-out:</strong> {{ reserva.checkOut | date:'longDate' }}</p>
+    <p><strong>Número de personas:</strong> {{ reserva.guests }}</p>
+    <p><strong>Tipo de reserva:</strong> {{ reserva.tipoReserva }}</p>
+  </div>
+
+  <div class="buttons">
+    <button class="btn-modify">Modificar</button>
+    <button class="btn-cancel">Cancelar</button>
+  </div>
+
+  <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="review-section">
+
+    <h3>Valorar reserva</h3>
+
+    <div class="stars">
+      <span
+        *ngFor="let star of stars"
+        (click)="setRating(star)"
+        [class.filled]="star <= reviewForm.value.rating"
+        >&#9733;</span
+      >
+    </div>
+
+    <textarea
+      formControlName="comment"
+      placeholder="Escribe tu comentario..."
+      rows="4"
+      class="input-field"
+    ></textarea>
+
+    <button
+      type="submit"
+      class="btn-submit-review"
+      [disabled]="reviewForm.value.rating === 0"
+    >
+      Enviar valoración
+    </button>
+
+  </form>
+
+</div>
