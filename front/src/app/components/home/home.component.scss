@@ -1,7 +1,10 @@
+/* Tipos de letra recomendados */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap');
+
 .page-container {
-  background: #f9f7f3;
+  background: #fff8ee;
   min-height: 100vh;
-  padding: 48px 0;
+  padding: 48px 0 32px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,89 +12,93 @@
 
 .hotel-title {
   font-family: 'Playfair Display', serif;
-  font-size: 3rem;
+  font-size: 3.1rem;
+  color: #91704a;
   font-weight: 700;
-  color: #7a5c31;
-  margin-bottom: 16px;
-  letter-spacing: 2px;
-  text-shadow: 0 2px 16px rgba(122, 92, 49, 0.04);
+  letter-spacing: 1.8px;
+  margin-bottom: 14px;
+  text-shadow: 0 2px 16px rgba(146, 112, 74, 0.04);
 }
 
 .reservation-form {
-  background: #fff;
-  border-radius: 24px;
-  box-shadow: 0 8px 40px 0 rgba(180, 146, 89, 0.11), 0 2px 6px 0 rgba(180,146,89,0.04);
-  padding: 36px 32px;
-  min-width: 350px;
+  background: #f7f5ef;
+  border-radius: 26px;
+  box-shadow: 0 6px 36px 0 rgba(203,179,107,0.11), 0 2px 6px 0 rgba(91,74,39,0.05);
+  padding: 36px 36px 30px 36px;
+  min-width: 330px;
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 26px;
-  margin-top: 32px;
+  gap: 28px;
+  margin-top: 30px;
+  border: 1.8px solid #cbb36b;
 }
 
 .reservation-form label {
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.08rem;
-  color: #937341;
-  margin-bottom: 6px;
+  font-size: 1.10rem;
+  color: #5d4732;
+  margin-bottom: 5px;
+  font-weight: 600;
 }
 
 .input-field {
   font-family: 'Montserrat', sans-serif;
   font-size: 1.08rem;
-  padding: 10px 14px;
-  border: 1.5px solid #e5d5ba;
-  border-radius: 9px;
+  padding: 10px 13px;
+  border: 1.5px solid #e4d7b0;
+  border-radius: 8px;
   background: #fdfaf4;
   transition: border 0.2s;
-  color: #49341c;
+  color: #362c20;
   margin-top: 3px;
   width: 100%;
 }
 
 .input-field:focus {
   outline: none;
-  border: 1.5px solid #b49259;
+  border: 1.7px solid #cbb36b;
   background: #fffbea;
 }
 
 .btn-check {
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.13rem;
-  padding: 12px 0;
-  border-radius: 9px;
-  background: linear-gradient(90deg, #bea067 0%, #e9c78a 100%);
+  font-size: 1.17rem;
+  padding: 13px 0;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #cbb36b 0%, #91704a 100%);
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
   border: none;
-  box-shadow: 0 2px 14px rgba(180,146,89,0.12);
+  box-shadow: 0 2px 12px rgba(146,112,74,0.10);
   cursor: pointer;
   transition: background 0.18s, color 0.18s;
   margin-top: 10px;
+  letter-spacing: 0.7px;
 }
 
 .btn-check:hover {
-  background: linear-gradient(90deg, #9b7c46 0%, #d4b36e 100%);
-  color: #fff3d8;
+  background: linear-gradient(90deg, #a8955a 0%, #91704a 100%);
+  color: #f9f7f3;
 }
 
 .availability-message {
-  margin-top: 30px;
+  margin-top: 32px;
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.17rem;
+  font-size: 1.18rem;
   text-align: center;
-  color: #7a5c31;
-  background: #f6efd6;
-  border-radius: 9px;
-  padding: 16px;
-  max-width: 420px;
-  box-shadow: 0 2px 8px rgba(180,146,89,0.10);
+  color: #91704a;
+  background: #faf4e2;
+  border: 1.3px solid #cbb36b;
+  border-radius: 10px;
+  padding: 17px 18px;
+  max-width: 430px;
+  box-shadow: 0 2px 8px rgba(203,179,107,0.09);
 }
 
 .error {
-  color: #c97745;
-  font-size: 0.98rem;
+  color: #b7803a;
+  font-size: 0.99rem;
   margin-top: 3px;
   font-family: 'Montserrat', sans-serif;
 }
@@ -100,14 +107,14 @@
   .reservation-form {
     min-width: unset;
     max-width: 95vw;
-    padding: 18px 8px;
+    padding: 18px 7px;
   }
   .availability-message {
-    max-width: 98vw;
-    font-size: 1rem;
+    max-width: 97vw;
+    font-size: 1.03rem;
     padding: 12px;
   }
   .hotel-title {
-    font-size: 2.1rem;
+    font-size: 2rem;
   }
 }
