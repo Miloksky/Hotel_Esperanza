@@ -1,13 +1,17 @@
-<h2>Elige la habitación que quieres reservar</h2>
-
-<div class="habitaciones-container">
-  @for(room of rooms; track $index) {
-    <div class="room-card">
-      <h3>Habitación {{ room.number }} - {{ room.type }}</h3>
-      <p>{{ room.description }}</p>
-      <p>Precio: {{ room.price }} €</p>
-      <p>Capacidad: {{ room.capacity }} personas</p>
-      <button type="button" (click)="reserveRoom(room.number)">Reservar</button>
-    </div>
-  }
+<div class="reservations-container">
+  <h2 class="title">Elige la habitación que quieres reservar</h2>
+  <div class="rooms-grid">
+    @for(room of rooms; track $index) {
+      <div class="room-card">
+        <img src="https://via.placeholder.com/400x250" alt="Habitación" class="room-img" />
+        <div class="room-info">
+          <p class="room-number">Habitación {{ room.number }} - {{ room.type }}</p>
+          <p class="room-description">{{ room.description }}</p>
+          <p class="room-price">Precio: {{ room.price }} €</p>
+          <p class="room-capacity">Capacidad: {{ room.capacity }} personas</p>
+          <button type="button" (click)="reserveRoom(room.number)">Reservar</button>
+        </div>
+      </div>
+    }
+  </div>
 </div>

@@ -25,6 +25,12 @@ const createRoomReservation = async (req, res) => {
       }
       const { id: room_id, price: room_price } = roomInfo;
 
+      const resourcePrice = await reservationsM.findResourcePriceById(room.resource_id);
+    if (!resourcePrice) {
+        await reservationsM.deleteReservation(reservation_id);
+        return res.status(400).json({ msg: "El recurso no existe" });
+    }
+
       if (invalidDates(room.start_date, room.end_date)) {
         await reservationsM.deleteReservation(reservation_id);
         return res.status(400).json({ msg: "Las fechas son inválidas" });
@@ -39,7 +45,7 @@ const createRoomReservation = async (req, res) => {
 
       const nights = numberOfNights(room.start_date, room.end_date);
 
-      const subtotal = room_price * nights;
+      const subtotal = (room_price + resourcePrice)* nights;
       totalReservation += subtotal;
 
       const overlap = await reservationsM.checkOverlap(
@@ -61,7 +67,9 @@ const createRoomReservation = async (req, res) => {
         room.start_date,
         room.end_date,
         room_price,
-        subtotal
+        subtotal,
+        room.resource_id
+
       );
 
       if (!reservation) {

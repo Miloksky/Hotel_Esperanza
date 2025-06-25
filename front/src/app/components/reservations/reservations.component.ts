@@ -19,13 +19,6 @@ export class ReservationsComponent implements OnInit {
   router = inject(Router);
 
   ngOnInit(){
-    const token = localStorage.getItem('token');
-    console.log(token);
-    if (!token) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
     const roomsData = localStorage.getItem('availableRooms');
     if (roomsData) {
       this.rooms = JSON.parse(roomsData);
@@ -39,6 +32,11 @@ export class ReservationsComponent implements OnInit {
     }
   }
     reserveRoom(roomNumber: string) {
+      const token = localStorage.getItem('token');
+      if (!token) {
+     this.router.navigate(['/login']);
+     return;
+    }
     const reservationData = {
       rooms: [
         {
