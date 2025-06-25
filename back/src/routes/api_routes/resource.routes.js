@@ -25,6 +25,8 @@ router.delete('/:id', deleteResource);
 //  solo uno 
 router.get('/:id', getResourceById);
 
+// ruuta privvada solo puede acceder admin para elmiinar
+// router.delete('/:id', checkToken, authorizeAdmin, deleteResource);
 
 module.exports = router;
 
