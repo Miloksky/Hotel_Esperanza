@@ -8,6 +8,7 @@ const createReservationId = async (id) => {
     }
 
     return result.insertId;
+    console.log(result)
 }
 
 const findIdAndPriceByNumber = async (number) => {
@@ -42,7 +43,7 @@ const deleteReservation = async(reservationId)=>{
 }
 
 const checkOverlap = async (room_id,newStartDate,newEndDate) => {
-    const select = "SELECT * FROM reservation_rooms WHERE room_id = ? AND NOT ( ? <= start_date OR ? >= end_date ) AND id =";
+    const select = "SELECT * FROM reservation_rooms WHERE room_id = ? AND NOT ( ? <= start_date OR ? >= end_date )";
     const [result] = await pool.query(select,[room_id,newEndDate,newStartDate]);
     if(!result.length){
         return false

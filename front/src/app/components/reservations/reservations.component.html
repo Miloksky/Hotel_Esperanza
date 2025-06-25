@@ -1,1 +1,13 @@
-<p>reservations works!</p>
+<h2>Elige la habitación que quieres reservar</h2>
+
+<div class="habitaciones-container">
+  @for(room of rooms; track $index) {
+    <div class="room-card">
+      <h3>Habitación {{ room.number }} - {{ room.type }}</h3>
+      <p>{{ room.description }}</p>
+      <p>Precio: {{ room.price }} €</p>
+      <p>Capacidad: {{ room.capacity }} personas</p>
+      <button type="button" (click)="reserveRoom(room.number)">Reservar</button>
+    </div>
+  }
+</div>

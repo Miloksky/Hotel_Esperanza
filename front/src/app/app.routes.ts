@@ -4,7 +4,7 @@ import { ReservationsComponent } from './components/reservations/reservations.co
 
 export const routes: Routes = [
   {path: 'home',component: HomeComponent},
-  {path: 'reservation',component : ReservationsComponent},
+  {path: 'reservations',component : ReservationsComponent},
   {path: '',redirectTo : 'home',pathMatch:'full'},
   {path:'**',redirectTo : 'home'}
 

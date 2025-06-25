@@ -248,23 +248,23 @@ const editReservation = async (req, res) => {
     }
    
 
-    const roomsAvailable = await reservationsM.findAvailableRooms(start_date, end_date);
+    let roomsAvailable = await reservationsM.findAvailableRooms(start_date, end_date);
     console.log(roomsAvailable)
     if (!roomsAvailable) {
-      return res.status(200).json({ success: false, msg: "No hay habitaciones disponibles para esas fechas" });
+      //preguntar esta parte
+      roomsAvailable = []
+      return res.status(200).json(roomsAvailable);
     }
     let totalCapacity = 0;
     let selectedRooms = [];
     for (const room of roomsAvailable) {
       totalCapacity += room.capacity;
-      selectedRooms.push(room);
     }
-
     if (totalCapacity >= guests) {
-      return res.status(200).json({ success: true, rooms: selectedRooms });
-    } else {
-      return res.status(200).json({ success: false, msg: "No hay suficientes habitaciones libres para ese número de personas" });
-    }
+      selectedRooms = roomsAvailable;
+     } 
+    return res.status(200).json(selectedRooms);
+   
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, msg: "Error del servidor" });

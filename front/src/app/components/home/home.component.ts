@@ -28,6 +28,11 @@ export class HomeComponent {
     guests: new FormControl<number>(1, Validators.required),
   });
 
+  getMinCheckOutDate(): string {
+    const checkInDate = this.dateForm.get('checkIn')?.value;
+   return checkInDate || this.today;
+  }
+
   checkAvailability() {
     if (this.dateForm.invalid) {
       this.dateForm.markAllAsTouched();
@@ -35,6 +40,7 @@ export class HomeComponent {
       return;
     }
     const { checkIn, checkOut, guests } = this.dateForm.value;
+    localStorage.setItem('reservationInfo', JSON.stringify([checkIn, checkOut, guests]));
 
     if (checkIn < this.today) {
       this.availabilityMessage =
@@ -58,7 +64,7 @@ export class HomeComponent {
         if (rooms.length === 0) {
           this.availabilityMessage = 'No hay habitaciones disponibles para estas fechas';
         }else {
-          console.log("entró")
+          localStorage.setItem('availableRooms', JSON.stringify(rooms));
           this.router.navigate(['/reservations']);
         }
       },
