@@ -88,4 +88,51 @@ const deleteRoom = async (req, res) => {
     }
 };
 
-module.exports = { getAllRooms, getRoomById, createRoom, updateRoom, deleteRoom };
+// Obtener los recursos de una habitación:
+const getRoomResources = async (req, res) => {
+    try {
+        const resources = await Room.getRoomResourcesFromDb(req.params.id);
+        if (resources.length > 0) {
+            res.json({
+                success: true,
+                message: 'Recursos obtenidos correctamente',
+                data: resources
+            });
+        } else {
+            res.json({
+                success: false,
+                message: 'Esta habitación no tiene recursos asignados'
+            });
+        }
+    } catch (error) {
+        console.error('Error al obtener los recursos de la habitación:', error);
+        res.status(500).json({ error: 'Error interno del servidor al obtener los recursos' });
+    }
+};
+
+// Asignar recursos a una habitación:
+const assignResourcesToRoom = async (req, res) => {
+    const { resourceIds } = req.body;
+    const roomId = req.params.id;
+
+    try {
+        const affectedRows = await Room.assignResourcesToRoomInDb(roomId, resourceIds);
+
+        if (affectedRows > 0) {
+            res.json({
+                success: true,
+                message: 'Recursos asignados correctamente a la habitación'
+            });
+        } else {
+            res.json({
+                success: false,
+                message: 'No se asignaron recursos'
+            });
+        }
+    } catch (error) {
+        console.error('Error al asignar recursos a la habitación:', error);
+        res.status(500).json({ error: 'Error interno del servidor al asignar recursos' });
+    }
+};
+
+module.exports = { getAllRooms, getRoomById, createRoom, updateRoom, deleteRoom, getRoomResources, assignResourcesToRoom };

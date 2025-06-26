@@ -1,9 +1,13 @@
 <div class="page-container">
   <h1 class="hotel-title">Hotel Esperanza</h1>
 
-  <form class="reservation-form"  [formGroup]="dateForm"  (ngSubmit)="checkAvailability()">
+  <form
+    class="reservation-form"
+    [formGroup]="dateForm"
+    (ngSubmit)="checkAvailability()"
+  >
     <div class="date">
-    <label for="checkIn">Fecha de entrada:</label>
+      <label for="checkIn">Fecha de entrada:</label>
       <input
         type="date"
         id="checkIn"
@@ -13,10 +17,9 @@
         class="checkIn-date"
         [min]="today"
       />
-      <p class="error"
-         *ngIf="dateForm.get('checkIn')?.invalid && dateForm.get('checkIn')?.touched">
-         La fecha de entrada es obligatoria.
-      </p>
+      @if(dateForm.get('checkIn')?.invalid && dateForm.get('checkIn')?.touched){
+      <p class="error">La fecha de entrada es obligatoria.</p>
+      }
     </div>
 
     <div class="date">
@@ -28,39 +31,43 @@
         name="checkOut"
         required
         class="checkOut-date"
-        [min]="dateForm.get('checkIn')?.value"
+        [min]="getMinCheckOutDate()"
       />
-      <p class="error"
-         *ngIf="dateForm.get('checkOut')?.invalid && dateForm.get('checkOut')?.touched">
-         La fecha de salida es obligatoria.
-      </p>
+      @if(dateForm.get('checkOut')?.invalid &&
+      dateForm.get('checkOut')?.touched){
+      <p class="error">La fecha de salida es obligatoria.</p>
+      }
     </div>
 
     <div class="guest">
       <label for="guests">Número de personas: *</label>
       <select
         id="guests"
-        formControlName="guest"
+        formControlName="guests"
         name="guests"
         required
         class="input-field"
       >
-        <option *ngFor="let guest of guestOptions" [value]="guest">
-          {{ guest }}
-        </option>
+        @for (guest of guestOptions; track guest) {
+        <option [value]="guest">{{ guest }}</option>
+        }
       </select>
-      <p *ngIf="dateForm.get('guests')?.invalid && dateForm.get('guests')?.touched" style="color: red">
-          Debes elegir el número de huéspedes.
-        </p>
+
+      <p
+        *ngIf="
+          dateForm.get('guests')?.invalid && dateForm.get('guests')?.touched
+        "
+        style="color: red"
+      >
+        Debes elegir el número de huéspedes.
+      </p>
     </div>
 
-    <button type="submit" class="btn-check">
-      Ver disponibilidad
-    </button>
+    <button type="submit" class="btn-check">Ver disponibilidad</button>
   </form>
-
-  <p  class="availability-message" *ngIf="availabilityMessage">
+  @if(availabilityMessage){
+  <p class="availability-message">
     {{ availabilityMessage }}
   </p>
+  }
 </div>
-

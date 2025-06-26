@@ -25,6 +25,12 @@ const createRoomReservation = async (req, res) => {
       }
       const { id: room_id, price: room_price } = roomInfo;
 
+      const resourcePrice = await reservationsM.findResourcePriceById(room.resource_id);
+    if (!resourcePrice) {
+        await reservationsM.deleteReservation(reservation_id);
+        return res.status(400).json({ msg: "El recurso no existe" });
+    }
+
       if (invalidDates(room.start_date, room.end_date)) {
         await reservationsM.deleteReservation(reservation_id);
         return res.status(400).json({ msg: "Las fechas son inválidas" });
@@ -39,7 +45,7 @@ const createRoomReservation = async (req, res) => {
 
       const nights = numberOfNights(room.start_date, room.end_date);
 
-      const subtotal = room_price * nights;
+      const subtotal = (room_price + resourcePrice)* nights;
       totalReservation += subtotal;
 
       const overlap = await reservationsM.checkOverlap(
@@ -61,7 +67,9 @@ const createRoomReservation = async (req, res) => {
         room.start_date,
         room.end_date,
         room_price,
-        subtotal
+        subtotal,
+        room.resource_id
+
       );
 
       if (!reservation) {
@@ -248,23 +256,23 @@ const editReservation = async (req, res) => {
     }
    
 
-    const roomsAvailable = await reservationsM.findAvailableRooms(start_date, end_date);
+    let roomsAvailable = await reservationsM.findAvailableRooms(start_date, end_date);
     console.log(roomsAvailable)
     if (!roomsAvailable) {
-      return res.status(200).json({ success: false, msg: "No hay habitaciones disponibles para esas fechas" });
+      //preguntar esta parte
+      roomsAvailable = []
+      return res.status(200).json(roomsAvailable);
     }
     let totalCapacity = 0;
     let selectedRooms = [];
     for (const room of roomsAvailable) {
       totalCapacity += room.capacity;
-      selectedRooms.push(room);
     }
-
     if (totalCapacity >= guests) {
-      return res.status(200).json({ success: true, rooms: selectedRooms });
-    } else {
-      return res.status(200).json({ success: false, msg: "No hay suficientes habitaciones libres para ese número de personas" });
-    }
+      selectedRooms = roomsAvailable;
+     } 
+    return res.status(200).json(selectedRooms);
+   
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, msg: "Error del servidor" });
