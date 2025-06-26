@@ -17,7 +17,6 @@ export class ClientComponent {
     hotelName: 'Hotel Esperanza',
     checkIn: new Date('2025-07-01'),
     checkOut: new Date('2025-07-07'),
-    guests: 2,
     tipoReserva: 'Habitación doble'
   };
 
