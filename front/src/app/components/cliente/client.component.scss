@@ -1,0 +1,134 @@
+.card-container {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  padding: 30px;
+  max-width: 480px;
+  margin: 40px auto;
+  font-family: 'Montserrat', sans-serif;
+  color: #49341c;
+}
+
+.reserva {
+   font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #49341c;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.hotel-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #7a5c31;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+
+.reservation-info p {
+  font-size: 1.1rem;
+  margin: 8px 0;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.buttons button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.btn-modify {
+  background-color: #bea067;
+  color: #fff;
+}
+
+.btn-modify:hover {
+  background-color: #9b7c46;
+}
+
+.btn-cancel {
+  background-color: #c95745;
+  color: #fff;
+}
+
+.btn-cancel:hover {
+  background-color: #a74433;
+}
+
+.review-section {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.review-section h3 {
+  font-size: 1.5rem;
+  color: #7a5c31;
+  text-align: center;
+}
+
+.stars {
+  font-size: 2.4rem;
+  color: #e0d6b6;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+}
+
+.stars .filled {
+  color: #bea067;
+}
+
+.input-field {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  padding: 12px 14px;
+  border: 1.5px solid #e5d5ba;
+  border-radius: 9px;
+  background: #fdfaf4;
+  resize: vertical;
+  transition: border 0.2s;
+  color: #49341c;
+}
+
+.input-field:focus {
+  outline: none;
+  border: 1.5px solid #b49259;
+  background: #fffbea;
+}
+
+.btn-submit-review {
+  background: linear-gradient(90deg, #bea067 0%, #e9c78a 100%);
+  color: white;
+  border: none;
+  border-radius: 9px;
+  padding: 12px 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 14px rgba(180,146,89,0.12);
+  cursor: pointer;
+  transition: background 0.18s;
+  margin-top: 10px;
+}
+
+.btn-submit-review:disabled {
+  background: #d6caa3;
+  cursor: not-allowed;
+}
+
+.btn-submit-review:not(:disabled):hover {
+  background: linear-gradient(90deg, #9b7c46 0%, #d4b36e 100%);
+  color: #fff3d8;
+}

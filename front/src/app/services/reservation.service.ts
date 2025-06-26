@@ -6,11 +6,23 @@ import { IReservationResponse } from '../interfaces/reservation-response';
 import { AuthService } from './auth.service';
 import { IResourceResponse } from '../interfaces/resource.interface';
 
+export interface Reserva {
+  start_date: string;
+  end_date: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class ReservationService {
   httpClient = inject(HttpClient);
+<<<<<<< HEAD
+  private API_URL = 'http://localhost:3000';
+
+  getReserva(): Observable<Reserva> {
+    return this.httpClient.get<Reserva>(`${this.API_URL}/reservas/1`);
+  }
+=======
   private authService = inject(AuthService);
   private API_URL = 'http://localhost:3000/';
 
@@ -46,4 +58,5 @@ getRoomResources(roomId: number): Observable<IResourceResponse> {
 
 
 
+>>>>>>> d82c280679a60d5f9350526496903727ab649a5f
 }
