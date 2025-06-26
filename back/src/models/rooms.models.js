@@ -42,6 +42,28 @@ class Room {
         throw error;
     }
 }
+static async getRoomResourcesFromDb(roomId) {
+    const [rows] = await db.query(
+        `SELECT res.id, res.name, res.price
+         FROM resources res
+         JOIN room_resources rr ON res.id = rr.resource_id
+         WHERE rr.room_id = ?`,
+        [roomId]
+    );
+    return rows;
+}
+
+static async assignResourcesToRoomInDb(roomId, resourceIds) {
+    const values = resourceIds.map(resourceId => [roomId, resourceId]);
+    const [result] = await db.query(
+        `INSERT INTO room_resources (room_id, resource_id) VALUES ?`,
+        [values]
+    );
+    return result.affectedRows;
+}
+
+
+
 }
 
 module.exports = Room;

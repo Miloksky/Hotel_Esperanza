@@ -17,7 +17,7 @@ exports.getAllResources = (req, res) => {
 exports.createResource = (req, res) => {
   const { name, price, status } = req.body;
 
-  const sql = 'INSERT INTO resources (name, price, status) VALUES (?, ?, ?)';
+  const sql = 'INSERT INTO resources (name, price) VALUES (?, ?)';
   const values = [name, price, status];
 
   db.query(sql, values, (err, result) => {
@@ -57,7 +57,7 @@ exports.updateResource = (req, res) => {
   const id = req.params.id;
   const { name, price, status } = req.body;
 
-  const sql = 'UPDATE resources SET name = ?, price = ?, status = ? WHERE id = ?';
+  const sql = 'UPDATE resources SET name = ?, price = ? WHERE id = ?';
   const values = [name, price, status, id];
 
   db.query(sql, values, (err, result) => {
