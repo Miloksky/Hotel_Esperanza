@@ -9,5 +9,7 @@ router.get('/show/rooms/:id', roomsC.getRoomById);
 router.post('/create/rooms', checkToken, roomsC.createRoom);
 router.put('/update/rooms/:id', checkToken, roomsC.updateRoom);
 router.delete('/delete/rooms/:id', roomsC.deleteRoom);
+router.get('/getRoomsResources/rooms/:id/resources',roomsC.getRoomResources)
+router.post('/addResourcesToRooms/rooms/:id/resources',checkToken,roomsC.assignResourcesToRoom);
 
 module.exports = router;
