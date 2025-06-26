@@ -19,8 +19,8 @@ const findIdAndPriceByNumber = async (number) => {
     }
      return { id: result[0].id, price: result[0].price }
 }
-const addReservation = async(reservation_id,room_id,start_date,end_date,unit_price,subtotal)=>{
-    const insert ="INSERT INTO reservation_rooms (reservation_id,room_id,start_date,end_date,unit_price,subtotalresource_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+const addReservation = async(reservation_id,room_id,start_date,end_date,unit_price,subtotal,resource_id)=>{
+    const insert ="INSERT INTO reservation_rooms (reservation_id,room_id,start_date,end_date,unit_price,subtotal,resource_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
     const [result] = await pool.query(insert, [
         reservation_id,
         room_id,
