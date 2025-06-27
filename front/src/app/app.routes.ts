@@ -1,9 +1,20 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
+import { provideRouter } from '@angular/router';
 
 export const routes: Routes = [
-  {path: 'home',component: HomeComponent},
-  {path: '',redirectTo : 'home',pathMatch:'full'},
-  {path:'**',redirectTo : 'home'}
-
+  {
+    path: 'login',
+    loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'home',
+    loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent)
+  },
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  }
 ];
+
+export const AppRouting = provideRouter(routes);
