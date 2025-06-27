@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 const db = require('../config/connection.js');
 
 // Obtener todos los recursos
@@ -71,4 +69,3 @@ exports.updateResource = (req, res) => {
     }
   });
 };
->>>>>>> a06ef57ad3e725d7fba7ed6906e9042d183d3faf
