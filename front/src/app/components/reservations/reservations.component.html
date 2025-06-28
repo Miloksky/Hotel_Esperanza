@@ -1,0 +1,109 @@
+<div class="reservations-container">
+  <h2 class="title">Elige la habitación que quieres reservar</h2>
+  <div class="main-content">
+    <div class="rooms-grid">
+      @for(room of rooms; track $index) {
+      <div class="room-card">
+        <h3>Habitación {{ room.number }} - {{ room.type }}</h3>
+        <p>{{ room.description }}</p>
+        <p>Precio: {{ room.price }} €</p>
+        <p>Capacidad: {{ room.capacity }} personas</p>
+
+        @if (showRoomResources === room.number) {
+        <div class="resource-options">
+          <label>Selecciona tu plan de estancia:</label>
+          <div>
+            <input
+              type="radio"
+              [name]="'resource_' + room.id"
+              [value]= "null"
+              (change)="selectedResources[room.id] = null"
+              [checked]="!selectedResources[room.id]"
+            />
+            Ninguno (solo habitación)
+          </div>
+          @if (roomResources[room.id]) { @for(resource of
+          roomResources[room.id]; track resource.id) {
+          <div>
+            <input
+              type="radio"
+              [name]="'resource_' + room.id"
+              [value]="resource.id"
+              (change)="selectedResources[room.id] = resource.id"
+              [checked]="selectedResources[room.id] === resource.id"
+            />
+            {{ resource.name }} (+{{ resource.price }}€/noche)
+          </div>
+          } }
+          <button type="button" (click)="showRoomResources = null">
+            Ocultar opciones
+          </button>
+        </div>
+        } @if (showRoomResources !== room.number) {
+        <button type="button" (click)="showRoomResources = room.number">
+          Mostrar opciones de plan
+        </button>
+        }
+        <button type="button" (click)="addOrRemoveRoom(room)">
+          Añadir/quitar esta habitación
+        </button>
+      </div>
+      }
+    </div>
+    @if (selectedRoom.length > 0) {
+    <aside class="reservation-summary">
+      <h3>Resumen de tu reserva</h3>
+
+      <!-- Lista de habitaciones seleccionadas -->
+      @for (room of selectedRoom; track room.id) {
+      <div class="summary-room-card">
+        <p><strong>Habitación:</strong> {{ room.number }} - {{ room.type }}</p>
+        <p><strong>Precio base:</strong> {{ room.price }} €/noche</p>
+        <p><strong>Capacidad:</strong> {{ room.capacity }} personas</p>
+
+        <!-- Muestra el plan de estancia elegido -->
+        @if (roomResources[room.id]) { @if (selectedResources[room.id]) { @for
+        (resource of roomResources[room.id]; track resource.id) { @if
+        (resource.id === selectedResources[room.id]) {
+        <p>
+          <strong>Plan:</strong> {{ resource.name }} (+{{
+            resource.price
+          }}€/noche)
+        </p>
+        } } } @else {
+        <p><strong>Plan:</strong> Ninguno</p>
+        } } @else {
+        <p><strong>Plan:</strong> Ninguno</p>
+        }
+
+        <!-- Botón para quitar habitación -->
+        <button type="button" (click)="addOrRemoveRoom(room)">Quitar</button>
+      </div>
+      }
+
+      <!-- Fechas y huéspedes -->
+      <p><strong>Desde:</strong> {{ checkInDate }}</p>
+      <p><strong>Hasta:</strong> {{ checkOutDate }}</p>
+      <p><strong>Huéspedes:</strong> {{ guests }}</p>
+      <p><strong>Capacidad total:</strong> {{ getTotalCapacity() }}</p>
+      <p><strong>Total:</strong> {{ calculateTotal() }} €</p>
+
+      <!-- Error si capacidad < huéspedes -->
+      @if (getTotalCapacity() < guests) {
+      <p style="color: red">
+        <strong>¡No hay suficientes camas para todos los huéspedes!</strong>
+      </p>
+      }
+
+      <!-- Botón Confirmar reserva -->
+      <button
+        type="button"
+        (click)="confirmReservation()"
+        [disabled]="!selectedRoom.length || getTotalCapacity() < guests"
+      >
+        Confirmar reserva
+      </button>
+    </aside>
+    }
+  </div>
+</div>

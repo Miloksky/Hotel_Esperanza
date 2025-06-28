@@ -1,20 +1,17 @@
 import { Routes } from '@angular/router';
-import { provideRouter } from '@angular/router';
+import { HomeComponent } from './components/home/home.component';
+import { ReservationsComponent } from './components/reservations/reservations.component';
+import { LoginComponent } from './components/login/login.component';
+import { authGuard } from './guards/auth.guard'; 
 
 export const routes: Routes = [
+  { path: 'home', component: HomeComponent },
   {
-    path: 'login',
-    loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent)
+    path: 'reservations',
+    component: ReservationsComponent,
+    canActivate: [authGuard] 
   },
-  {
-    path: 'home',
-    loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent)
-  },
-  {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
-  }
+  { path: 'login', component: LoginComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: 'home' }
 ];
-
-export const AppRouting = provideRouter(routes);
