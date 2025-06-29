@@ -179,8 +179,18 @@
     }
   }
 }
+.edit-dates-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  
+}
+.edit-dates-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+} 
 
-/* Responsive: sidebar se pone debajo */
 @media (max-width: 1100px) {
   .reservations-container {
     .main-content {

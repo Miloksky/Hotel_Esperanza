@@ -3,11 +3,12 @@ import { IRoom } from '../../interfaces/room.interface';
 import { ReservationService } from '../../services/reservation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IResource } from '../../interfaces/resource.interface';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-reservations',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './reservations.component.html',
   styleUrl: './reservations.component.scss',
 })
@@ -20,11 +21,14 @@ export class ReservationsComponent implements OnInit {
   selectedRoomNumber: string | null = null;
   checkInDate: string = '';
   checkOutDate: string = '';
-  guests: number = 0;
+  guests: number = 1;
   roomResources: { [key: number]: IResource[] } = {};
   selectedResources: { [key: number]: number | null } = {};
   selectedRoom: IRoom[] = [];
   showRoomResources: string | null = null;
+  editDates: boolean = false;
+  today = new Date().toISOString().slice(0, 10);
+  editDatesError: string = '';
 
   ngOnInit() {
     const roomsData = localStorage.getItem('availableRooms');
@@ -35,6 +39,7 @@ export class ReservationsComponent implements OnInit {
     for (let room of this.rooms) {
       this.loadRoomResources(room.id);
     }
+
     const reservationInfo = localStorage.getItem('reservationInfo');
     if (reservationInfo) {
       const [checkIn, checkOut, guests] = JSON.parse(reservationInfo);
@@ -43,19 +48,17 @@ export class ReservationsComponent implements OnInit {
       this.guests = guests;
     }
 
-    const pendingRooms = localStorage.getItem('pendingReservationRooms');
-    const pendingResources = localStorage.getItem( 'pendingReservationResources');
-    const pendingCheckIn = localStorage.getItem('pendingReservationCheckIn');
-    const pendingCheckOut = localStorage.getItem('pendingReservationCheckOut');
-    const pendingGuests = localStorage.getItem('pendingReservationGuests');
+    const pending = localStorage.getItem('pendingReservation');
+    if (pending) {
+      const data = JSON.parse(pending);
+      console.log('Restaurando reserva:', data);
+      this.selectedRoom = data.selectedRoom;
+      this.selectedResources = data.selectedResources;
+      this.checkInDate = data.checkInDate;
+      this.checkOutDate = data.checkOutDate;
+      this.guests = Number(data.guests);
 
-    if (pendingRooms && pendingResources && pendingCheckIn && pendingCheckOut && pendingGuests
-    ) {
-      this.selectedRoom = JSON.parse(pendingRooms);
-      this.selectedResources = JSON.parse(pendingResources);
-      this.checkInDate = pendingCheckIn;
-      this.checkOutDate = pendingCheckOut;
-      this.guests = Number(pendingGuests);
+      localStorage.removeItem('pendingReservation');
     }
   }
 
@@ -127,7 +130,16 @@ export class ReservationsComponent implements OnInit {
       alert('No hay suficientes camas para todos los huéspedes.');
       return;
     }
-
+    console.log(
+      'CheckIn:',
+      this.checkInDate,
+      'CheckOut:',
+      this.checkOutDate,
+      'Rooms:',
+      this.selectedRoom,
+      'Resources:',
+      this.selectedResources
+    );
     const reservationData = {
       rooms: this.selectedRoom.map((room) => ({
         number: room.number,
@@ -141,22 +153,28 @@ export class ReservationsComponent implements OnInit {
 
     const token = localStorage.getItem('token');
     if (!token) {
-    const pendingReservation = {
-    selectedRoom: this.selectedRoom,
-    selectedResources: this.selectedResources,
-    checkInDate: this.checkInDate,
-    checkOutDate: this.checkOutDate,
-    guests: this.guests
-  };
-  localStorage.setItem('pendingReservation', JSON.stringify(pendingReservation));
+      const pendingReservation = {
+        selectedRoom: this.selectedRoom,
+        selectedResources: this.selectedResources,
+        checkInDate: this.checkInDate,
+        checkOutDate: this.checkOutDate,
+        guests: this.guests,
+      };
+      localStorage.setItem(
+        'pendingReservation',
+        JSON.stringify(pendingReservation)
+      );
       this.router.navigate(['/login']);
       return;
     }
     this.reservationService.createRoomReservation(reservationData).subscribe({
       next: (response) => {
         if (response.success) {
-          //limpiar selección, redirigir, mostrar mensaje...
           alert('¡Reserva realizada con éxito!');
+          localStorage.removeItem('pendingReservation');
+          localStorage.removeItem('availableRooms');
+          localStorage.removeItem('reservationInfo');
+          this.router.navigate(['/cliente']);
         } else {
           alert('Error: ' + response.msg);
           this.router.navigate(['/login']);
@@ -168,5 +186,52 @@ export class ReservationsComponent implements OnInit {
     });
   }
 
-  editReservation() {}
+ minCheckOutDate(): string {
+  if (this.checkInDate) {
+    const date = new Date(this.checkInDate);
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().slice(0, 10);
+  }
+  return this.today;
+}
+
+ saveDates() {
+  // Guardar fechas y huéspedes actualizados
+  this.editDatesError = '';
+  if (!this.checkInDate || !this.checkOutDate || !this.guests) {
+     this.editDatesError = 'Por favor, rellena todos los campos antes de guardar.';
+    return;
+  }
+  if (this.checkInDate < this.today) {
+    this.editDatesError = 'La fecha de entrada no puede ser anterior a hoy.';
+    return;
+  }
+
+  if (this.checkInDate >= this.checkOutDate) {
+   this.editDatesError = 'La fecha de salida debe ser posterior a la de entrada.';
+    return;
+  }
+  localStorage.setItem('reservationInfo', JSON.stringify([this.checkInDate, this.checkOutDate, this.guests]));
+  // Consultar al backend habitaciones disponibles con las nuevas fechas
+  this.reservationService.roomsAvailable({
+    start_date: this.checkInDate,
+    end_date: this.checkOutDate,
+    guests: this.guests,
+  }).subscribe({
+    next: (rooms) => {
+      this.rooms = rooms;
+      localStorage.setItem('availableRooms', JSON.stringify(rooms));
+      this.selectedRoom = [];
+      this.selectedResources = {};
+      this.editDates = false;
+      for (let room of this.rooms) {
+        this.loadRoomResources(room.id);
+      }
+    },
+    error: () => {
+      this.rooms = [];
+      alert('Hubo un problema al consultar la disponibilidad.');
+    }
+  });
+}
 }

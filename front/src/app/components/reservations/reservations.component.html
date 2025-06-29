@@ -2,57 +2,70 @@
   <h2 class="title">Elige la habitación que quieres reservar</h2>
   <div class="main-content">
     <div class="rooms-grid">
-      @for(room of rooms; track $index) {
-      <div class="room-card">
-        <h3>Habitación {{ room.number }} - {{ room.type }}</h3>
-        <p>{{ room.description }}</p>
-        <p>Precio: {{ room.price }} €</p>
-        <p>Capacidad: {{ room.capacity }} personas</p>
-
-        @if (showRoomResources === room.number) {
-        <div class="resource-options">
-          <label>Selecciona tu plan de estancia:</label>
-          <div>
-            <input
-              type="radio"
-              [name]="'resource_' + room.id"
-              [value]= "null"
-              (change)="selectedResources[room.id] = null"
-              [checked]="!selectedResources[room.id]"
-            />
-            Ninguno (solo habitación)
-          </div>
-          @if (roomResources[room.id]) { @for(resource of
-          roomResources[room.id]; track resource.id) {
-          <div>
-            <input
-              type="radio"
-              [name]="'resource_' + room.id"
-              [value]="resource.id"
-              (change)="selectedResources[room.id] = resource.id"
-              [checked]="selectedResources[room.id] === resource.id"
-            />
-            {{ resource.name }} (+{{ resource.price }}€/noche)
-          </div>
-          } }
-          <button type="button" (click)="showRoomResources = null">
-            Ocultar opciones
-          </button>
+      <div class="rooms-grid">
+        @if (rooms.length === 0) {
+        <div class="no-rooms-message">
+          <p>
+            No hay habitaciones disponibles para estas fechas y huéspedes,elija
+            otras fechas.
+          </p>
         </div>
-        } @if (showRoomResources !== room.number) {
-        <button type="button" (click)="showRoomResources = room.number">
-          Mostrar opciones de plan
-        </button>
+        } @for(room of rooms; track $index) {
+        <div class="room-card">
+          <h3>Habitación {{ room.number }} - {{ room.type }}</h3>
+          <p>{{ room.description }}</p>
+          <p>Precio: {{ room.price }} €</p>
+          <p>Capacidad: {{ room.capacity }} personas</p>
+
+          @if (showRoomResources === room.number) {
+          <div class="resource-options">
+            <label>Selecciona tu plan de estancia:</label>
+            <div>
+              <input
+                type="radio"
+                [name]="'resource_' + room.id"
+                [value]="null"
+                (change)="selectedResources[room.id] = null"
+                [checked]="!selectedResources[room.id]"
+              />
+              Ninguno (solo habitación)
+            </div>
+            @if (roomResources[room.id]) { @for(resource of
+            roomResources[room.id]; track resource.id) {
+            <div>
+              <input
+                type="radio"
+                [name]="'resource_' + room.id"
+                [value]="resource.id"
+                (change)="selectedResources[room.id] = resource.id"
+                [checked]="selectedResources[room.id] === resource.id"
+              />
+              {{ resource.name }} (+{{ resource.price }}€/noche)
+            </div>
+            } }
+            <button type="button" (click)="showRoomResources = null">
+              Ocultar opciones
+            </button>
+          </div>
+          } @if (showRoomResources !== room.number) {
+          <button type="button" (click)="showRoomResources = room.number">
+            Mostrar opciones de plan
+          </button>
+          }
+          <button type="button" (click)="addRoom(room)">Añadir</button>
+        </div>
         }
-        <button type="button" (click)="addRoom(room)">
-          Añadir
-        </button>
       </div>
-      }
     </div>
-    @if (selectedRoom.length > 0) {
     <aside class="reservation-summary">
       <h3>Resumen de tu reserva</h3>
+      @if (editDatesError) {
+  <p style="color: #d84343; margin-top: 6px; font-weight: bold;">
+    {{ editDatesError }}
+  </p>
+}
+
+      @if (selectedRoom.length > 0) {
 
       <!-- Lista de habitaciones seleccionadas -->
       @for (room of selectedRoom; track room.id) {
@@ -103,7 +116,58 @@
       >
         Confirmar reserva
       </button>
+      }@else {
+      <!-- SOLO FECHAS SI NO HAY HABITACIONES SELECCIONADAS -->
+      @if (!editDates) {
+      <p><strong>Desde:</strong> {{ checkInDate }}</p>
+      <p><strong>Hasta:</strong> {{ checkOutDate }}</p>
+      <p><strong>Huéspedes:</strong> {{ guests }}</p>
+      <button type="button" (click)="editDates = true">Editar fechas</button>
+      }
+
+      <!-- Mostrar inputs para editar si estás editando -->
+      @if (editDates) {
+      <form class="edit-dates-form">
+        <label
+          >Desde:
+          <input
+            type="date"
+            [(ngModel)]="checkInDate"
+            [min]="today"
+            required
+            name="checkInDate"
+          />
+        </label>
+        <label
+          >Hasta:
+          <input
+            type="date"
+            [(ngModel)]="checkOutDate"
+            [min]="minCheckOutDate()"
+            required
+            name="checkOutDate"
+          />
+        </label>
+        <label
+          >Huéspedes:
+          <input
+            type="number"
+            [(ngModel)]="guests"
+            min="1"
+            required
+            name="guests"
+          />
+        </label>
+        <button type="button" (click)="saveDates()">Guardar cambios</button>
+        <button type="button" (click)="editDates = false">Cancelar</button>
+        
+      </form>
+
+      }
+      <p style="opacity: 0.6; font-style: italic">
+        No hay habitaciones seleccionadas
+      </p>
+      }
     </aside>
-    }
   </div>
 </div>
