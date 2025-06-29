@@ -42,6 +42,21 @@ export class ReservationsComponent implements OnInit {
       this.checkOutDate = checkOut;
       this.guests = guests;
     }
+
+    const pendingRooms = localStorage.getItem('pendingReservationRooms');
+    const pendingResources = localStorage.getItem( 'pendingReservationResources');
+    const pendingCheckIn = localStorage.getItem('pendingReservationCheckIn');
+    const pendingCheckOut = localStorage.getItem('pendingReservationCheckOut');
+    const pendingGuests = localStorage.getItem('pendingReservationGuests');
+
+    if (pendingRooms && pendingResources && pendingCheckIn && pendingCheckOut && pendingGuests
+    ) {
+      this.selectedRoom = JSON.parse(pendingRooms);
+      this.selectedResources = JSON.parse(pendingResources);
+      this.checkInDate = pendingCheckIn;
+      this.checkOutDate = pendingCheckOut;
+      this.guests = Number(pendingGuests);
+    }
   }
 
   loadRoomResources(roomId: number) {
@@ -126,6 +141,14 @@ export class ReservationsComponent implements OnInit {
 
     const token = localStorage.getItem('token');
     if (!token) {
+    const pendingReservation = {
+    selectedRoom: this.selectedRoom,
+    selectedResources: this.selectedResources,
+    checkInDate: this.checkInDate,
+    checkOutDate: this.checkOutDate,
+    guests: this.guests
+  };
+  localStorage.setItem('pendingReservation', JSON.stringify(pendingReservation));
       this.router.navigate(['/login']);
       return;
     }
@@ -136,6 +159,7 @@ export class ReservationsComponent implements OnInit {
           alert('¡Reserva realizada con éxito!');
         } else {
           alert('Error: ' + response.msg);
+          this.router.navigate(['/login']);
         }
       },
       error: () => {
