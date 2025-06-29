@@ -10,6 +10,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(),
     provideRouter(routes),
+    provideHttpClient(),
     importProvidersFrom(CommonModule, FormsModule)
   ]
 };

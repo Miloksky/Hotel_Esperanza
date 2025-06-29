@@ -26,12 +26,6 @@ const registerUser = async (req,res) => {
                 data : createUser.insertId
             })
         }
-
-
-
-
-
-
     } catch (error) {
         res.status(500).json(error);
     }

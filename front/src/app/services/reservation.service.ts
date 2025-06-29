@@ -16,12 +16,8 @@ export interface Reserva {
 })
 export class ReservationService {
   httpClient = inject(HttpClient);
-  private API_URL = 'http://localhost:3000/';
   private authService = inject(AuthService);
-
-  getReserva(): Observable<Reserva> {
-    return this.httpClient.get<Reserva>(`${this.API_URL}reservas/1`);
-  }
+  private API_URL = 'http://localhost:3000/';
 
 
 
@@ -51,6 +47,10 @@ getRoomResources(roomId: number): Observable<IResourceResponse> {
       reservationData,
       { headers }
     );
+  }
+
+  getReserva(): Observable<Reserva> {
+    return this.httpClient.get<Reserva>(`${this.API_URL}reservas/1`);
   }
 
 
