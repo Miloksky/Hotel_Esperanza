@@ -24,7 +24,7 @@ export class ReservationsComponent implements OnInit {
   roomResources: { [key: number]: IResource[] } = {};
   selectedResources: { [key: number]: number | null } = {};
   selectedRoom: IRoom[] = [];
-  showRoomResources: string | null = null; 
+  showRoomResources: string | null = null;
 
   ngOnInit() {
     const roomsData = localStorage.getItem('availableRooms');
@@ -56,23 +56,22 @@ export class ReservationsComponent implements OnInit {
   }
 
   addRoom(room: IRoom) {
-  if (!this.selectedRoom.find((r) => r.number === room.number)) {
-    this.selectedRoom.push(room);
+    if (!this.selectedRoom.find((r) => r.number === room.number)) {
+      this.selectedRoom.push(room);
+    }
   }
-}
 
-removeRoom(room: IRoom) {
-  const index = this.selectedRoom.findIndex((r) => r.number === room.number);
-  if (index !== -1) {
-    this.selectedRoom.splice(index, 1);
+  removeRoom(room: IRoom) {
+    const index = this.selectedRoom.findIndex((r) => r.number === room.number);
+    if (index !== -1) {
+      this.selectedRoom.splice(index, 1);
+    }
   }
-}
-
 
   getTotalCapacity(): number {
     let total = 0;
     for (let room of this.selectedRoom) {
-      total += room.capacity; 
+      total += room.capacity;
     }
     return total;
   }
@@ -106,48 +105,44 @@ removeRoom(room: IRoom) {
     return total;
   }
 
-
-
   confirmReservation() {
-  
-  if (!this.selectedRoom.length) return;
+    if (!this.selectedRoom.length) return;
 
-
-  if (this.getTotalCapacity() < this.guests) {
-    alert('No hay suficientes camas para todos los huéspedes.');
-    return;
-  }
-
-  const reservationData = {
-    rooms: this.selectedRoom.map(room => ({
-      number: room.number,
-      start_date: this.checkInDate,
-      end_date: this.checkOutDate,
-      resource_id: this.selectedResources[room.id]
-    }))
-  };
-
-  console.log(reservationData)
-
-  const token = localStorage.getItem('token');
-  if (!token) {
-    this.router.navigate(['/login']);
-    return;
-  }
-  this.reservationService.createRoomReservation(reservationData).subscribe({
-    next: (response) => {
-      if (response.success) {
-        //limpiar selección, redirigir, mostrar mensaje...
-        alert('¡Reserva realizada con éxito!');
-      } else {
-        alert('Error: ' + response.msg);
-      }
-    },
-    error: () => {
-      alert("error del servidor");
+    if (this.getTotalCapacity() < this.guests) {
+      alert('No hay suficientes camas para todos los huéspedes.');
+      return;
     }
-  });
-}
 
- editReservation() {}
+    const reservationData = {
+      rooms: this.selectedRoom.map((room) => ({
+        number: room.number,
+        start_date: this.checkInDate,
+        end_date: this.checkOutDate,
+        resource_id: this.selectedResources[room.id],
+      })),
+    };
+
+    console.log(reservationData);
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.reservationService.createRoomReservation(reservationData).subscribe({
+      next: (response) => {
+        if (response.success) {
+          //limpiar selección, redirigir, mostrar mensaje...
+          alert('¡Reserva realizada con éxito!');
+        } else {
+          alert('Error: ' + response.msg);
+        }
+      },
+      error: () => {
+        alert('error del servidor');
+      },
+    });
+  }
+
+  editReservation() {}
 }
