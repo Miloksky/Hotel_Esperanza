@@ -48,7 +48,6 @@ export class ReservationsComponent implements OnInit {
     this.reservationService.getRoomResources(roomId).subscribe({
       next: (response) => {
         this.roomResources[roomId] = response.data;
-        console.log('Resources for room', roomId, response);
       },
       error: () => {
         this.roomResources[roomId] = [];
@@ -56,20 +55,20 @@ export class ReservationsComponent implements OnInit {
     });
   }
 
-  addOrRemoveRoom(room: IRoom) {
-    const exists = this.selectedRoom.find((r) => r.number === room.number); 
-    if (exists) {
-      for (let room of this.selectedRoom) {
-        if (room.number === room.number) {
-          const index = this.selectedRoom.indexOf(room);
-          this.selectedRoom.splice(index, 1);
-          return;
-        }
-      }
-    } else {
-      this.selectedRoom.push(room); 
-    }
+  addRoom(room: IRoom) {
+  if (!this.selectedRoom.find((r) => r.number === room.number)) {
+    this.selectedRoom.push(room);
   }
+}
+
+removeRoom(room: IRoom) {
+  const index = this.selectedRoom.findIndex((r) => r.number === room.number);
+  if (index !== -1) {
+    this.selectedRoom.splice(index, 1);
+  }
+}
+
+
   getTotalCapacity(): number {
     let total = 0;
     for (let room of this.selectedRoom) {
@@ -108,7 +107,7 @@ export class ReservationsComponent implements OnInit {
   }
 
 
-  editReservation() {}
+
   confirmReservation() {
   
   if (!this.selectedRoom.length) return;
@@ -119,13 +118,6 @@ export class ReservationsComponent implements OnInit {
     return;
   }
 
- 
-  for (let room of this.selectedRoom) {
-    if (this.selectedResources[room.id] === undefined) {
-      this.selectedResources[room.id] = 0;
-    }
-  }
-
   const reservationData = {
     rooms: this.selectedRoom.map(room => ({
       number: room.number,
@@ -134,6 +126,8 @@ export class ReservationsComponent implements OnInit {
       resource_id: this.selectedResources[room.id]
     }))
   };
+
+  console.log(reservationData)
 
   const token = localStorage.getItem('token');
   if (!token) {
@@ -150,8 +144,10 @@ export class ReservationsComponent implements OnInit {
       }
     },
     error: () => {
-      alert('Error de red al reservar.');
+      alert("error del servidor");
     }
   });
 }
+
+ editReservation() {}
 }
