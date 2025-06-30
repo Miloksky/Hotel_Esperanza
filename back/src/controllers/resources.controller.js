@@ -30,42 +30,74 @@ exports.createResource = (req, res) => {
   });
 };
 
+// // Crear un recurso
+// exports.createResource = async (req, res) => {
+//   try {
+//     const { name, price, status } = req.body;
 
+//     const sql = 'INSERT INTO resources (name, price, status) VALUES (?, ?, ?)';
+//     const [result] = await db.query(sql, [name, price, status]);
 
-// Eliminar un recursio
-exports.deleteResource = (req, res) => {
-  const id = req.params.id;
+//     res.status(201).json({ message: 'Recurso creado', id: result.insertId });
+//   } catch (err) {
+//     console.error('Error al crear recurso:', err);
+//     res.status(500).json({ message: 'Error al insertar el recurso' });
+//   }
+// };
 
-  const sql = 'DELETE FROM resources WHERE id = ?';
+// Eliminar un recurso
+exports.deleteResource = async (req, res) => {
+  try {
+    const id = req.params.id;
 
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      console.error('Error al eliminar recurso:', err);
-      return res.status(500).json({ error: 'Error al eliminar recurso' });
-    }
+    const sql = 'DELETE FROM resources WHERE id = ?';
+    const [result] = await db.query(sql, [id]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Recurso no encontrado' });
     }
 
     res.json({ message: 'Recurso eliminado correctamente' });
-  });
+  } catch (err) {
+    console.error('Error al eliminar recurso:', err);
+    res.status(500).json({ error: 'Error al eliminar recurso' });
+  }
 };
 
-// actualzairlo
-exports.updateResource = (req, res) => {
-  const id = req.params.id;
-  const { name, price, status } = req.body;
+// Actualizar un recurso
+exports.updateResource = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { name, price, status } = req.body;
 
   const sql = 'UPDATE resources SET name = ?, price = ? WHERE id = ?';
   const values = [name, price, status, id];
 
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(500).json({ message: 'Error al actualizar el recurso' });
-    } else {
-      res.json({ message: 'Recurso actualizado' });
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Recurso no encontrado' });
     }
-  });
+
+    res.json({ message: 'Recurso actualizado' });
+  } catch (err) {
+    console.error('Error al actualizar recurso:', err);
+    res.status(500).json({ message: 'Error al actualizar el recurso' });
+  }
+};
+// soools un recuros
+exports.getResourceById = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const sql = 'SELECT * FROM resources WHERE id = ?';
+    const [rows] = await db.query(sql, [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Recurso no encontrado' });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error('Error al obtener recurso:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
