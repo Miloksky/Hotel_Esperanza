@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -11,11 +12,11 @@ import { ReactiveFormsModule } from '@angular/forms';
   
 })
 export class AdminComponent {
-  // Aquí se pueden incluir funciones para redireccionar o abrir modales en el futuro
+  
+  constructor(private router: Router) { }
 
   onManageRooms() {
-    alert('Navegar a Crear/Modificar Habitaciones');
-    // Aquí puedes usar routing o lógica adicional más adelante
+    this.router.navigate(['/admin/rooms-list']);
   }
 
   onManageResources() {
