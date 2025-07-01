@@ -95,27 +95,25 @@ const findReservationId = async(id)=>{
     return result[0].reservation_id
 }
 
-const updateReservation = async (id,start_date,end_date,unit_price,subtotal) => {
-    const update = "UPDATE reservation_rooms SET start_date = ?, end_date = ?, unit_price = ?, subtotal = ? WHERE reservation_rooms.id = ?";
-    const [result] = await pool.query(update,[start_date,end_date,unit_price,subtotal,id]);
-    if(result.affectedRows === 0){
-        return false;
-    }
-    return result;
-}
+// const updateReservation = async (id,start_date,end_date,unit_price,subtotal) => {
+//     const update = "UPDATE reservation_rooms SET start_date = ?, end_date = ?, unit_price = ?, subtotal = ? WHERE reservation_rooms.id = ?";
+//     const [result] = await pool.query(update,[start_date,end_date,unit_price,subtotal,id]);
+//     if(result.affectedRows === 0){
+//         return false;
+//     }
+//     return result;
+// }
 
-const updateFullReservation = async(reservationId, guests, start_date, end_date, rooms)=>{
+const updateReservationGuests = async(reservationId, guests)=>{
     const updateGuests = "UPDATE reservations SET guests = ? WHERE id = ?";
     const [result] = await pool.query(updateGuests,[guests,reservationId]);
     if(!result){
         return false;
     }
-    return result
-
-
-
-
+    return result;
 }
+
+
 
 const recalculateTotal = async (id)=>{
     const select = "SELECT SUM(subtotal) AS total FROM reservation_rooms WHERE reservation_id = ?";
@@ -171,4 +169,4 @@ const getRoomsByReservationId = async (reservationId) => {
 };
 
 
-module.exports = {createReservationId, findIdAndPriceByNumber, addReservation, deleteReservation, checkOverlap, getAll, getReservationByUserId, updateReservation, setTotalReservation, checkOverlapEdit, findReservationId, recalculateTotal, deleteById, findAvailableRooms, findResourcePriceById, getRoomsByReservationId, getReservationMainById}
+module.exports = {createReservationId, findIdAndPriceByNumber, addReservation, deleteReservation, checkOverlap, getAll, getReservationByUserId,setTotalReservation, checkOverlapEdit, findReservationId, recalculateTotal, deleteById, findAvailableRooms, findResourcePriceById, getRoomsByReservationId, getReservationMainById,updateReservationGuests}
