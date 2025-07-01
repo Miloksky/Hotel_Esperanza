@@ -5,11 +5,14 @@ import { AdminComponent } from './components/admin/admin.component';
 import { ReservationsComponent } from './components/reservations/reservations.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
+import { authGuard } from './guards/auth.guard';
+import { ReservationsEditComponent } from './components/reservations-edit/reservations-edit.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'cliente', component: ClientComponent },
   { path: 'reservations',component : ReservationsComponent},
+  { path: 'reservations/edit/:id', component: ReservationsEditComponent,canActivate: [authGuard]},
   { path: 'admin', component: AdminComponent },
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent },

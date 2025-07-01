@@ -1,0 +1,94 @@
+  <h3>reserva actual</h3>
+
+    <p>Desde: {{ checkInDate }}</p>
+    <p>Hasta: {{ checkOutDate }}</p>
+    <p>Huéspedes: {{ guests }}</p>
+   @for (room of selectedRoom; track room.id) {
+  <div>
+    <p>Habitación: {{ room.room_number }} - {{ room.type }} - {{room.price}} €/noche</p>
+    <p>Plan de estancia: 
+      @if (room.resource_id) {
+        {{ room.resource_name }} (+{{ room.resource_price }} €/noche)
+      } @else {
+        Ninguno
+      }
+    </p>
+    <p>Subtotal: {{ room.subtotal }} €</p>
+  </div>
+}
+<p><strong>Total:</strong> {{ totalOfReservation()}} €</p>
+
+@if (!editMode) {
+  <button type="button" (click)="editMode = true">Modificar datos de la reserva</button>
+}
+@if (editMode) {
+  <form>
+    <label>Desde:
+      <input type="date" [(ngModel)]="editCheckInDate" name="editCheckInDate" [min]="today" required />
+    </label>
+    <label>Hasta:
+      <input type="date" [(ngModel)]="editCheckOutDate" name="editCheckOutDate" [min]="minCheckOutDate()" required />
+    </label>
+    <label>Huéspedes:
+      <input type="number" [(ngModel)]="editGuests" name="editGuests" min="1" required />
+    </label>
+     <button type="button" (click)="findRooms()">Guardar cambios</button>
+    <!-- <button type="button" (click)="cancelEdition(id)">Cancelar</button> -->
+  </form>
+}
+
+@if (roomsAvailable.length <= 0){
+  <h3>{{erroMsg}} </h3>
+}
+
+@if (roomsAvailable.length > 0) {
+       @for (room of roomsAvailable; track room.id) {
+  <div>
+     <h3>Habitación {{ room.number }} - {{ room.type }}</h3>
+          <p>{{ room.description }}</p>
+          <p>Precio: {{ room.price }} €</p>
+          <p>Capacidad: {{ room.capacity }} personas</p>
+    @if (showRoomResources === room.number) {
+    <div class="resource-options">
+      <label>Selecciona tu plan de estancia:</label>
+      <div>
+        <input
+          type="radio"
+          [name]="'resource_' + room.id"
+          [value]="null"
+          (change)="editSelectedResources[room.id] = null"
+          [checked]="!editSelectedResources[room.id]"
+        />
+        Ninguno (solo habitación)
+      </div>
+      @if (roomResources[room.id]) {
+        @for (resource of roomResources[room.id]; track resource.id) {
+          <div>
+            <input
+              type="radio"
+              [name]="'resource_' + room.id"
+              [value]="resource.id"
+              (change)="editSelectedResources[room.id] = resource.id"
+              [checked]="editSelectedResources[room.id] === resource.id"
+            />
+            {{ resource.name }} (+{{ resource.price }}€/noche)
+          </div>
+        }
+      }
+      <button type="button" (click)="showRoomResources = null">
+        Ocultar opciones
+      </button>
+    </div>
+  }
+
+  @if (showRoomResources !== room.number) {
+    <button type="button" (click)="showRoomResources = room.number">
+      Mostrar opciones de plan
+    </button>
+  }
+
+  <button type="button" (click)="addRoom(room)">Añadir</button>
+    <button type="button" (click)="removeRoom(room)">Eliminar</button>
+  </div>
+}}
+     

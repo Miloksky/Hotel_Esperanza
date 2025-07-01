@@ -62,9 +62,7 @@
       @if (editDatesError) {
   <p style="color: #d84343; margin-top: 6px; font-weight: bold;">
     {{ editDatesError }}
-  </p>
-}
-
+  </p>}
       @if (selectedRoom.length > 0) {
 
       <!-- Lista de habitaciones seleccionadas -->
@@ -124,8 +122,13 @@
       <p><strong>Huéspedes:</strong> {{ guests }}</p>
       <button type="button" (click)="editDates = true">Editar fechas</button>
       }
+      <p style="opacity: 0.6; font-style: italic">
+        No hay habitaciones seleccionadas
+      </p>
+      }
+    </aside>
 
-      <!-- Mostrar inputs para editar si estás editando -->
+        <!-- Mostrar inputs para editar si estás editando -->
       @if (editDates) {
       <form class="edit-dates-form">
         <label
@@ -164,10 +167,5 @@
       </form>
 
       }
-      <p style="opacity: 0.6; font-style: italic">
-        No hay habitaciones seleccionadas
-      </p>
-      }
-    </aside>
   </div>
 </div>

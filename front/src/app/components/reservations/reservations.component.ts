@@ -29,8 +29,12 @@ export class ReservationsComponent implements OnInit {
   editDates: boolean = false;
   today = new Date().toISOString().slice(0, 10);
   editDatesError: string = '';
+  EditMode: boolean = false;
+
+  
 
   ngOnInit() {
+   
     const roomsData = localStorage.getItem('availableRooms');
 
     if (roomsData) {
@@ -61,6 +65,7 @@ export class ReservationsComponent implements OnInit {
       localStorage.removeItem('pendingReservation');
     }
   }
+
 
   loadRoomResources(roomId: number) {
     this.reservationService.getRoomResources(roomId).subscribe({
@@ -141,6 +146,7 @@ export class ReservationsComponent implements OnInit {
       this.selectedResources
     );
     const reservationData = {
+       guests: this.guests,
       rooms: this.selectedRoom.map((room) => ({
         number: room.number,
         start_date: this.checkInDate,
@@ -149,7 +155,6 @@ export class ReservationsComponent implements OnInit {
       })),
     };
 
-    console.log(reservationData);
 
     const token = localStorage.getItem('token');
     if (!token) {
