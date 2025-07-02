@@ -1,10 +1,10 @@
 <div class="card-container">
   <h1 class="reserva">Mis reservas</h1>
-  <h2 class="hotel-name">{{ reserva.hotelName }}</h2>
+  <h2 class="hotel-name">{{ reserva?.hotelName }}</h2>
 
   <div class="reservation-info">
-    <p><strong>Fecha check-in:</strong> {{ reserva.checkIn | date:'longDate' }}</p>
-    <p><strong>Fecha check-out:</strong> {{ reserva.checkOut | date:'longDate' }}</p>
+    <p><strong>Fecha check-in:</strong> {{ reserva?.checkIn | date:'longDate' }}</p>
+    <p><strong>Fecha check-out:</strong> {{ reserva?.checkOut | date:'longDate' }}</p>
   </div>
 
   <div class="buttons">

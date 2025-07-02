@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ReservationService } from '../../services/reservation.service';
 
 @Component({
   selector: 'app-cliente',
@@ -9,16 +10,11 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
   templateUrl: './client.component.html',
   styleUrls: ['./client.component.scss']
 })
-export class ClientComponent {
+export class ClientComponent implements OnInit {
   private fb = inject(FormBuilder);
+  private reservationService = inject(ReservationService);
 
-  // Datos de ejemplo de una reserva
-  reserva = {
-    hotelName: 'Hotel Esperanza',
-    checkIn: new Date('2025-07-01'),
-    checkOut: new Date('2025-07-07'),
-    tipoReserva: 'Habitación doble'
-  };
+  reserva: any;
 
   // Formulario para la valoración
   reviewForm: FormGroup = this.fb.group({
@@ -27,6 +23,17 @@ export class ClientComponent {
   });
 
   stars = [1, 2, 3, 4, 5];
+
+  ngOnInit(): void {
+    this.reservationService.getReserva().subscribe((reserva) => {
+      this.reserva = {
+        hotelName: 'Hotel Esperanza',
+        checkIn: new Date(reserva.start_date),
+        checkOut: new Date(reserva.end_date),
+        tipoReserva: 'Habitación doble'
+      };
+    });
+  }
 
   setRating(star: number) {
     this.reviewForm.controls['rating'].setValue(star);
