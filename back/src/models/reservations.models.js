@@ -48,7 +48,13 @@ const setTotalReservation = async (reservation_id, total) => {
 const deleteReservation = async(reservationId)=>{
     const deleteById ="DELETE FROM reservations WHERE id = ?";
     const [result] = await pool.query(deleteById,[reservationId]); 
+    if(result.affectedRows === 0){
+        return false;
+    }
+    return result
 }
+
+
 
 const checkOverlap = async (room_id,newStartDate,newEndDate) => {
     const select = "SELECT * FROM reservation_rooms WHERE room_id = ? AND NOT ( ? <= start_date OR ? >= end_date )";
@@ -86,23 +92,6 @@ const getReservationByUserId = async (id) => {
     return result;
 }
 
-const findReservationId = async(id)=>{
-    const select = "SELECT * FROM reservation_rooms WHERE id = ?";
-    const [result] = await pool.query(select,[id]);
-    if(result.length === 0){
-        return false;
-    }
-    return result[0].reservation_id
-}
-
-// const updateReservation = async (id,start_date,end_date,unit_price,subtotal) => {
-//     const update = "UPDATE reservation_rooms SET start_date = ?, end_date = ?, unit_price = ?, subtotal = ? WHERE reservation_rooms.id = ?";
-//     const [result] = await pool.query(update,[start_date,end_date,unit_price,subtotal,id]);
-//     if(result.affectedRows === 0){
-//         return false;
-//     }
-//     return result;
-// }
 
 const updateReservationGuests = async(reservationId, guests)=>{
     const updateGuests = "UPDATE reservations SET guests = ? WHERE id = ?";
@@ -113,6 +102,18 @@ const updateReservationGuests = async(reservationId, guests)=>{
     return result;
 }
 
+const deleteReservationRoomsByReservationId = async (reservationId) => {
+  const dlt = "DELETE FROM reservation_rooms WHERE reservation_id = ?";
+  const [result]= await pool.query(dlt, [reservationId]);
+  if(!result){
+    return false;
+  }
+  return result
+};
+
+
+
+
 
 
 const recalculateTotal = async (id)=>{
@@ -122,14 +123,14 @@ const recalculateTotal = async (id)=>{
     return result[0].total;
 }
 
-const deleteById = async (id) => {
-    const query = "DELETE FROM reservations WHERE id = ?";
-    const [result] = await pool.query(query,[id]);
-    if(result.affectedRows === 0){
-        return false;
-    }
-    return result
-}
+// const deleteById = async (id) => {
+//     const query = "DELETE FROM reservations WHERE id = ?";
+//     const [result] = await pool.query(query,[id]);
+//     if(result.affectedRows === 0){
+//         return false;
+//     }
+//     return result
+// }
 const findAvailableRooms = async (start_date, end_date) => {
   const select = "SELECT * FROM rooms WHERE id NOT IN (SELECT room_id FROM reservation_rooms WHERE NOT (? <= start_date OR ? >= end_date))";
   const [result] = await pool.query(select, [end_date, start_date]);
@@ -169,4 +170,4 @@ const getRoomsByReservationId = async (reservationId) => {
 };
 
 
-module.exports = {createReservationId, findIdAndPriceByNumber, addReservation, deleteReservation, checkOverlap, getAll, getReservationByUserId,setTotalReservation, checkOverlapEdit, findReservationId, recalculateTotal, deleteById, findAvailableRooms, findResourcePriceById, getRoomsByReservationId, getReservationMainById,updateReservationGuests}
+module.exports = {createReservationId, findIdAndPriceByNumber, addReservation, deleteReservation, checkOverlap, getAll, getReservationByUserId,setTotalReservation, checkOverlapEdit, recalculateTotal, findAvailableRooms, findResourcePriceById, getRoomsByReservationId, getReservationMainById, updateReservationGuests, deleteReservationRoomsByReservationId}
