@@ -7,14 +7,18 @@ const {
 
 const createRoomReservation = async (req, res) => {
   try {
-    const { rooms } = req.body;
+    const { rooms, guests } = req.body;
     const user_id = req.userLogin.id;
+
+    if (!guests || guests < 1) {
+  return res.status(400).json({ msg: "El número de huéspedes es obligatorio" });
+}
 
     if (!Array.isArray(rooms) || rooms.length === 0) {
       return res.status(400).json({ msg: "No hay habitaciones seleccionadas" });
     }
 
-    const reservation_id = await reservationsM.createReservationId(user_id);
+    const reservation_id = await reservationsM.createReservationId(user_id, guests);
     let totalReservation = 0;
 
     for (let room of rooms) {
@@ -156,30 +160,63 @@ const editReservation = async (req, res) => {
       });
     }
     const { id } = req.params;
-    const { number, start_date, end_date } = req.body;
-    const roomInfo = await reservationsM.findIdAndPriceByNumber(number);
-    if (!roomInfo) {
-      return res.status(404).json({ msg: "La habitación no existe" });
+    const { guests,rooms} = req.body;
+    if (!Array.isArray(rooms) || rooms.length === 0) {
+      return res.status(400).json({ msg: "No hay habitaciones seleccionadas" });
     }
-    const { id: room_id, price: room_price } = roomInfo;
+    const updateGuests = await reservationsM.updateReservationGuests(id, guests);
+    if(!updateGuests){
+      return res.status(400).json({
+        success:false,
+        msg:"No se pudo actualizar el apartado huespedes"
+      })
+    }
+    const deteleReservationRooms = await reservationsM.deleteReservationRoomsByReservationId(id);
+    if(!deteleReservationRooms){
+      return res.status(400).json({
+        success: false,
+        msg:"No se pudo borrar los datos de las reservas de habitaciones"
+      })
+    }
+    let totalReservation = 0;
 
-    if (invalidDates(start_date, end_date)) {
+     for (let room of rooms) {
+      const roomInfo = await reservationsM.findIdAndPriceByNumber(room.number);
+      if (!roomInfo) {
+        return res.status(404).json({ msg: "La habitación no existe" });
+      }
+      const { id: room_id, price: room_price } = roomInfo;
+
+      let resourcePrice = 0;
+      if (room.resource_id !== null) {
+        resourcePrice = await reservationsM.findResourcePriceById(room.resource_id);
+        if (!resourcePrice) {
+          return res.status(400).json({
+            success:false,
+            msg: "El recurso no existe" });
+        }
+      }
+
+
+    if (invalidDates(room.start_date, room.end_date)) {
       return res.status(400).json({ msg: "Las fechas son inválidas" });
     }
 
-    if (checkInBeforeToday(start_date)) {
+    if (checkInBeforeToday(room.start_date)) {
       return res.status(400).json({
         msg: "Las fechas son incorrectas",
       });
     }
 
-    const nights = numberOfNights(start_date, end_date);
+    const nights = numberOfNights(room.start_date, room.end_date);
+    const unit_price = Number(room_price) + Number(resourcePrice);
+    const subtotal = unit_price * nights;
+    totalReservation += subtotal;
 
-    const subtotal = room_price * nights;
     const overlap = await reservationsM.checkOverlapEdit(
       room_id,
-      start_date,
-      end_date,
+      room.start_date,
+      room.end_date,
       id
     );
 
@@ -189,30 +226,32 @@ const editReservation = async (req, res) => {
       });
     }
 
-    const reservationId = await reservationsM.findReservationId(id);
-    if (!reservationId) {
-      return res.status(404).json({
-        succes: false,
-        msg: "no se encuentra el id de reserva",
-      });
-    }
+    // const reservationId = await reservationsM.findReservationId(id);
+    // if (!reservationId) {
+    //   return res.status(404).json({
+    //     succes: false,
+    //     msg: "no se encuentra el id de reserva",
+    //   });
+    // }
 
-    const updatedReservation = await reservationsM.updateReservation(
+    const updatedReservation = await reservationsM.addReservation(
       id,
-      start_date,
-      end_date,
-      room_price,
-      subtotal
+      room.id,
+      room.start_date,
+      room.end_date,
+      unit_price,
+      subtotal,
+      room.resource_id
     );
     if (!updatedReservation) {
       return res.status(400).json({
         msg: "No se ha podido actualizar la reserva",
       });
-    }
-    const newTotal = await reservationsM.recalculateTotal(reservationId);
+    }}
+    // const newTotal = await reservationsM.recalculateTotal(reservationId);
     const totalAddedInReservation = await reservationsM.setTotalReservation(
-      reservationId,
-      newTotal
+      id,
+      totalReservation
     );
     if (!totalAddedInReservation) {
       return res.status(400).json({
@@ -221,10 +260,10 @@ const editReservation = async (req, res) => {
     }
 
     return res.status(200).json({
+      success:true,
       msg: "Reserva actualizada",
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       error,
     });
@@ -238,7 +277,7 @@ const editReservation = async (req, res) => {
       });
     }
     const {id} = req.params;
-    const deletedReservation = await reservationsM.deleteById(id);
+    const deletedReservation = await reservationsM.deleteReservation(id);
     if(!deletedReservation){
       return res.status(404).json({
         msg:"No se ha podido eliminar la reserva"
@@ -283,6 +322,31 @@ const editReservation = async (req, res) => {
   }
 };
 
+const getReservationById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const reservation = await reservationsM.getReservationMainById(id);
+    if (!reservation) {
+      return res.status(404).json({ success: false, msg: "No encontrada" });
+    }
+    const rooms = await reservationsM.getRoomsByReservationId(id);
+    res.json({
+      success: true,
+      data: {
+        id: reservation.id,
+        guests: reservation.guests,
+        checkInDate: rooms[0].start_date,
+        checkOutDate: rooms[0].end_date,   
+        rooms: rooms
+      }
+    });
+    
+     
+  } catch (error) {
+    res.status(500).json({ success: false, error });
+  }
+};
+
 
 module.exports = {
   createRoomReservation,
@@ -290,5 +354,5 @@ module.exports = {
   getReservationByUser,
   editReservation,
   deleteReservation,
-  checkAvailability
-};
+  checkAvailability,
+  getReservationById };
