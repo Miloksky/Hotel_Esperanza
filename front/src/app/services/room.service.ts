@@ -31,11 +31,4 @@ export class RoomService {
     return this.http.delete<void>(`${this.apiUrl}/rooms/delete/rooms/${id}`);
   }
 
-  getRoomResources(roomId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/rooms/getRoomsResources/rooms/${roomId}/resources`);
-  }
-
-  assignResourcesToRoom(roomId: string, resourceIds: string[]): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/rooms/addResourcesToRooms/rooms/${roomId}/resources`, { resourceIds });
-  }
 }

@@ -4,6 +4,6 @@ export interface IRoom {
   type: string;
   description: string;
   price: string;    
-  available: boolean; 
+  available: string; 
   capacity: number;
 }
