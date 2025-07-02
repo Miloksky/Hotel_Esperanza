@@ -131,3 +131,33 @@ dist
 
 /.vscode
 .DS_Store
+package-lock.json
+
+# ⚙️ Node.js
+node_modules/
+.env
+.env.local
+.env.*.local
+package-lock.json
+
+# ⚙️ Angular
+.angular/
+dist/
+out-tsc/
+.cache/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# ⚠️ Sistema / IDE
+.DS_Store
+*.log
+*.swp
+.vscode/
+.idea/
+
+# 💣 Evita subir caché del build
+front/.angular/
+front/dist/
+front/.cache/
+front/node_modules/

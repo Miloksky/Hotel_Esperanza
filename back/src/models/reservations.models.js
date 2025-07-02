@@ -135,6 +135,7 @@ const findResourcePriceById = async (resourceId) => {
     if (result.length === 0) {
         return false;
     }
+    console.log(result[0].price)
     return result[0].price;
 };
 
