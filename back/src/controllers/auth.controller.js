@@ -26,11 +26,12 @@ exports.login = (req, res) => {
     }
 
    
-    const token = jwt.sign(
-      { id: user.id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+const token = jwt.sign(
+  { id: user.id, role: user.role },
+  process.env.PASS_KEY, 
+  { expiresIn: '5h' }   
+);
+
 
     res.json({
       message: 'Login exitoso',
