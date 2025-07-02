@@ -26,12 +26,6 @@ const registerUser = async (req,res) => {
                 data : createUser.insertId
             })
         }
-
-
-
-
-
-
     } catch (error) {
         res.status(500).json(error);
     }
@@ -69,7 +63,9 @@ const login = async (req,res) => {
         res.status(200).json(token);
         
     }   catch (error) {
+        console.log(error);
             res.status(500).json(error)   
+            
         }
 
 } 
