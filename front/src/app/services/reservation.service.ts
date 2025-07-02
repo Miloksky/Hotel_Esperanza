@@ -14,7 +14,7 @@ export class ReservationService {
   httpClient = inject(HttpClient);
   private API_URL = 'http://localhost:3000';
 
-  getReserva(): Observable<Reserva> {
-    return this.httpClient.get<Reserva>(`${this.API_URL}/reservas/1`);
+  getReserva(id: number = 1): Observable<Reserva> {
+    return this.httpClient.get<Reserva>(`${this.API_URL}/reservations/list/${id}`);
   }
 }
