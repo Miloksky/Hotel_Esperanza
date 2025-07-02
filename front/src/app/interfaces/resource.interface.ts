@@ -7,4 +7,4 @@ export interface IResourceResponse {
   success: boolean;
   message: string;
   data: IResource[];
-}
+}  
