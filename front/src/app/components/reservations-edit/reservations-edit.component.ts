@@ -36,20 +36,21 @@ export class ReservationsEditComponent implements OnInit {
   editSelectedResources: { [key: number]: number | null } = {};
   roomResources: { [key: number]: IResource[] } = {};
   showRoomResources: string | null = null;
+  reservationId: number = 0;
 
 
 
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
-      const reservationId = Number(params['id']);
-      if (reservationId) {
+      this.reservationId = Number(params['id']);
+      if (this.reservationId) {
         const token = localStorage.getItem('token');
         if (!token) {
           this.router.navigate(['/login']);
           return;
         }
-        this.loadClientReservation(reservationId);
+        this.loadClientReservation(this.reservationId);
       }
     });
   }
@@ -177,11 +178,8 @@ getTotalCapacity(): number {
       alert('No hay suficientes camas para todos los huéspedes.');
       return;
     }
-    const reservationId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
     const reservationData = {
     guests: this.editGuests,
-    checkInDate: this.editCheckInDate,
-    checkOutDate: this.editCheckOutDate,
     rooms: this.editRooms.map(room => ({
       id: room.id,
       number: room.number,
@@ -191,27 +189,26 @@ getTotalCapacity(): number {
     })),
   };
 
-  //   this.reservationService.editReservation(reservationId, reservationData).subscribe({
-  //   next: (response) => {
-  //     if (response && response.success) {
-  //       alert('¡Reserva editada con éxito!');
-  //       // Actualiza los datos originales con los editados
-  //       this.selectedRoom = [...this.editRooms];
-  //       this.checkInDate = this.editCheckInDate;
-  //       this.checkOutDate = this.editCheckOutDate;
-  //       this.guests = this.editGuests;
-  //       this.editMode = false;
-  //       this.roomsAvailable = [];
-  //       this.editRooms = [];
-  //       this.editSelectedResources = {};
-  //     } else {
-  //       alert('Error: ' + (response?.msg || 'Error al editar la reserva.'));
-  //     }
-  //   },
-  //   error: () => {
-  //     alert('Error del servidor al editar la reserva.');
-  //   }
-  // });
+    this.reservationService.editReservation(this.reservationId, reservationData).subscribe({
+    next: (response) => {
+      if (response && response.success) {
+        alert('¡Reserva editada con éxito!');
+        this.selectedRoom = [...this.editRooms];
+        this.checkInDate = this.editCheckInDate;
+        this.checkOutDate = this.editCheckOutDate;
+        this.guests = this.editGuests;
+        this.editMode = false;
+        this.roomsAvailable = [];
+        this.editRooms = [];
+        this.editSelectedResources = {};
+      } else {
+        alert('Error: ' + (response.msg ));
+      }
+    },
+    error: () => {
+      alert('Error del servidor al editar la reserva.');
+    }
+  });
 }
 
 

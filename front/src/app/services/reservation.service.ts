@@ -53,7 +53,14 @@ export class ReservationService {
   return this.httpClient.get<{ data: IReservation }>(`${this.API_URL}reservations/getReservation/${id}`, { headers });
 }
 
-  editReservation(reservationId : any, reservationData:any){}
+ editReservation(reservationId: number, reservationData: any): Observable<IReservationResponse> {
+  const headers = this.authService.getAuthHeaders();
+  return this.httpClient.put<IReservationResponse>(
+    `${this.API_URL}reservations/edit/${reservationId}`,
+    reservationData,
+    { headers }
+  );
+}
 
   getReserva(): Observable<Reserva> {
     return this.httpClient.get<Reserva>(`${this.API_URL}reservas/1`);

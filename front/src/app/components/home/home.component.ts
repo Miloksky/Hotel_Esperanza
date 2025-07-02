@@ -71,7 +71,7 @@ export class HomeComponent {
       error: (err) => {
         this.rooms = [];
         this.availabilityMessage = 'Hubo un problema al consultar la disponibilidad.';
-        console.error(err);
+        console.log(err);
       }
     });
   }
