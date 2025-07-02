@@ -16,6 +16,12 @@ export const routes: Routes = [
   { path: 'admin', component: AdminComponent },
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent },
+  {
+    path: 'resources',
+    loadComponent: () =>
+      import('./components/resources/resources.component').then(m => m.ResourcesComponent),
+    canActivate: [authGuard]
+  },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'home' }
 ];
