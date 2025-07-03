@@ -141,6 +141,7 @@ node_modules/
 package-lock.json
 
 # ⚙️ Angular
+.angular
 .angular/
 dist/
 out-tsc/

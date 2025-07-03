@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReservationService } from './../../services/reservation.service';
 import { IRoom } from '../../interfaces/room.interface';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -53,13 +53,13 @@ export class HomeComponent {
         'La fecha de salida debe ser posterior a la de entrada.';
       return;
     }
+
   this.reservationService.roomsAvailable({
       start_date: checkIn,
       end_date: checkOut,
       guests: guests ?? 1,
     }).subscribe({
       next: (rooms) => {
-        console.log(rooms)
         this.rooms = rooms;
         if (rooms.length === 0) {
           this.availabilityMessage = 'No hay habitaciones disponibles para estas fechas';

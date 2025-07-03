@@ -1,1 +1,15 @@
+<div class="container">
+<nav>
+  <ul>
+    <li><a routerLink="/home" routerLinkActive="router-link-active">Home</a></li>
+    @if(!isLoggedIn) {
+      <li><a routerLink="/login" routerLinkActive="router-link-active">Login</a></li>
+    }
+    @if(isLoggedIn) {
+      <li><a (click)="goToReservation()">Mis reservas</a></li>
+      <li><a (click)="logout();">Logout</a></li>
+    }
+  </ul>
+</nav>
+</div>
 <router-outlet></router-outlet>

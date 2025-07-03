@@ -66,7 +66,6 @@ export class ReservationsEditComponent implements OnInit {
           this.checkInDate = res.checkInDate.substring(0, 10);
           this.checkOutDate = res.checkOutDate.substring(0, 10);
           this.guests = res.guests;
-          console.log(this.guests, this.checkInDate, this.selectedRoom);
         }
       },
       error: () => {

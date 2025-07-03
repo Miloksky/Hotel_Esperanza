@@ -15,11 +15,18 @@ export class AuthService {
   getToken(): string | null {
     return localStorage.getItem('token');
   }
+   getPayload(): any {
+    const token = this.getToken();
+    if (token) {
+      return JSON.parse(atob(token.split('.')[1]));
+    }
+    return null;
+  }
 
   getAuthHeaders(): { Authorization: string } {
     const token = this.getToken();
     return {
-      Authorization: `Bearer ${token}` //token necesario para acceder a odtras paginas
+      Authorization: `Bearer ${token}` 
     };
   }
 
