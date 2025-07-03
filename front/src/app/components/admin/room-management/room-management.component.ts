@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
 export class RoomManagementComponent implements OnInit{
   roomForm: FormGroup;
   isEditMode: boolean = false;
-  roomId: string | null = null;
+  roomId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -27,6 +27,7 @@ export class RoomManagementComponent implements OnInit{
     private router: Router
   ) {
     this.roomForm = this.fb.group({
+      id: [''],
       number: [null, [Validators.required, Validators.min(1)]],
       type: ['', Validators.required],
       description: ['', Validators.required],
@@ -38,8 +39,9 @@ export class RoomManagementComponent implements OnInit{
   ngOnInit(): void {
     this.route.paramMap.pipe(
       switchMap(params => {
-        this.roomId = params.get('id');
-        if (this.roomId) {
+        const idParam = params.get('id');
+        if (idParam) {
+          this.roomId = parseInt(idParam, 10);
           this.isEditMode = true;
           return this.roomService.getRoomById(this.roomId);
         } else {
@@ -58,7 +60,9 @@ export class RoomManagementComponent implements OnInit{
     console.log('onSubmit() se ha ejecutado');
     if (this.roomForm.valid) {
       console.log('Formulario válido. roomData:', this.roomForm.value);
-      const roomData: IRoom = this.roomForm.value;
+
+      const roomData: IRoom = { ...this.roomForm.value, id: this.roomId || '' };
+
       if (this.isEditMode && this.roomId) {
         this.roomService.updateRoom(this.roomId, roomData).subscribe({
           next: () => {
@@ -70,7 +74,8 @@ export class RoomManagementComponent implements OnInit{
           }
         });
       } else {
-        this.roomService.createRoom(roomData).subscribe({
+        const roomDataToCreate: Omit<IRoom, 'id'> = this.roomForm.value;
+        this.roomService.createRoom(roomDataToCreate as IRoom).subscribe({
           next: () => {
             console.log('¡Habitación creada exitosamente!');
             this.router.navigate(['/admin/rooms-list']);

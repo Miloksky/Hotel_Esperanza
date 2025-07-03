@@ -19,10 +19,13 @@ export class RoomListComponent implements OnInit{
   rooms: IRoom[] = [];
   isLoading: boolean = true;
   errorMessage: string | null = null;
+
   constructor(private roomService: RoomService, private router: Router) { }
+
   ngOnInit(): void {
     this.loadRooms();
   }
+
   loadRooms(): void {
     this.isLoading = true;
     this.errorMessage = null;
@@ -46,7 +49,7 @@ export class RoomListComponent implements OnInit{
   deleteRoom(roomId: number): void {
     if (confirm('¿Estás seguro de que quieres eliminar esta habitación?')) {
       if (roomId) {
-        this.roomService.deleteRoom(roomId.toString()).subscribe({
+        this.roomService.deleteRoom(roomId).subscribe({
           next: () => {
             console.log('Habitación eliminada exitosamente');
             this.loadRooms();

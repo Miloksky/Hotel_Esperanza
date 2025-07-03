@@ -19,6 +19,8 @@ export const routes: Routes = [
   { path: 'admin/rooms-list', component: RoomListComponent },
   { path: 'admin/room-management', component: RoomManagementComponent },
   { path: 'admin/room-management/:id', component: RoomManagementComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: 'home' }
 ]; 
 
 

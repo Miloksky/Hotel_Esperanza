@@ -15,19 +15,20 @@ export class RoomService {
     return this.http.get<IRoom[]>(`${this.apiUrl}/rooms/show/rooms`);
   }
 
-  getRoomById(id: string): Observable<IRoom> {
+  getRoomById(id: number): Observable<IRoom> {
     return this.http.get<IRoom>(`${this.apiUrl}/rooms/show/rooms/${id}`);
   }
 
   createRoom(room: IRoom): Observable<IRoom> {
+    RoomId: null;
     return this.http.post<IRoom>(`${this.apiUrl}/rooms/create/rooms`, room);
   }
 
-  updateRoom(id: string, room: IRoom): Observable<IRoom> {
+  updateRoom(id: number, room: IRoom): Observable<IRoom> {
     return this.http.put<IRoom>(`${this.apiUrl}/rooms/update/rooms/${id}`, room);
   }
 
-  deleteRoom(id: string): Observable<void> {
+  deleteRoom(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/rooms/delete/rooms/${id}`);
   }
 
