@@ -88,14 +88,16 @@ export class LoginComponent {
     this.authService.login({ email, password }).subscribe({
       next: (response: any) => {
         console.log('Login exitoso', response);
-        localStorage.setItem('token', response.token);
+        localStorage.setItem('token', response);
+        const payload = this.authService.getPayload();
+        (response);
+        const userId = payload.id;
 
-        // Redirección basada en reservationInfo
-        const hasReservationInfo = localStorage.getItem('reservationInfo');
+        const hasReservationInfo = localStorage.getItem('pendingReservation');
         if (hasReservationInfo) {
           this.router.navigate(['/reservations']);
         } else {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/cliente', userId]);
         }
       },
       error: (error: any) => {

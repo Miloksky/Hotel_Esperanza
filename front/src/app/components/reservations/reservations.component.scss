@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 .reservations-container {
   background: #fff8ee;
@@ -7,15 +7,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: 'Dancing Script', cursive;
-
+  font-family: 'lato', cursive;
+}
   .title {
-    font-size: 4rem;
-    color: #91704a;
-    font-weight: 700;
-    letter-spacing: 1.8px;
-    margin-bottom: 80px;
-    text-shadow: 0 2px 16px rgba(146, 112, 74, 0.04);
+  font-family: 'lato';
+  font-size: 3rem;
+  color: #91704a;
+   font-weight: 300;
+  // letter-spacing: 1px;
+  margin-bottom: 100px;
+  margin-top: 0px;
+  text-shadow: 0 2px 16px rgba(146, 112, 74, 0.04);
   }
 
   .main-content {
@@ -52,10 +54,10 @@
     }
 
     h3 {
-      font-size: 2rem;
+      font-size: 1.5rem;
       color: #91704a;
       margin-bottom: 0.7rem;
-      font-weight: 600;
+      font-weight: 400;
     }
 
     p {
@@ -111,25 +113,42 @@
   .reservation-summary {
     flex: 1;
     border: 1.5px solid #cbb36b;
-    background: #f7f5ef;
+    background: #f3efdc;
     border-radius: 18px;
     box-shadow: 0 6px 24px rgba(203,179,107,0.11);
     padding: 2.2rem 1.2rem;
     min-width: 290px;
     max-width: 340px;
     margin-top: 0.7rem;
-    font-family: 'Dancing Script', cursive;
-    position: sticky;
+    font-family: 'lato', cursive;
+    // position: sticky;
     top: 2.5rem;
+    
+     .summary-room-card {
+      background: #f9f7ee;
+      border-radius: 14px;
+      margin-bottom: 1.2rem;
+      padding: 1rem 1.2rem;
+      border: 1px solid #eadfae;
+      box-shadow: 0 2px 8px rgba(203,179,107,0.05);
+    }
+    .selectedRoomInfo{
+      padding-bottom: 30px;
+      padding-top: 30px;
+    }
 
     h3 {
+      border-bottom: 1px solid #9d8a51;
       font-size: 2.2rem;
-      color: #91704a;
+      color: #a78156;
       margin-bottom: 1.3rem;
+      font-weight: 400;
+      padding-bottom: 40px;
     }
     ul {
       padding-left: 1.2rem;
       margin-bottom: 1.2rem;
+
       li {
         font-size: 1.12rem;
         margin-bottom: 0.8rem;
@@ -146,7 +165,7 @@
           background: linear-gradient(90deg, #cbb36b 0%, #91704a 100%);
           color: #fff;
           border: none;
-          font-family: 'Dancing Script', cursive;
+          font-family: 'lato', cursive;
           cursor: pointer;
         }
       }
@@ -171,6 +190,7 @@
       box-shadow: 0 2px 12px rgba(146, 112, 74, 0.10);
       cursor: pointer;
       transition: background 0.18s, color 0.18s;
+      
 
       &:hover {
         background: linear-gradient(90deg, #a8955a 0%, #91704a 100%);
@@ -178,7 +198,7 @@
       }
     }
   }
-}
+
 .edit-dates-form {
   display: flex;
   flex-direction: column;

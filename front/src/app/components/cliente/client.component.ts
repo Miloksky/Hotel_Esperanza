@@ -1,6 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { AuthService } from './../../services/auth.service';
+import { Component, inject, Injectable, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-cliente',
@@ -9,8 +11,29 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
   templateUrl: './client.component.html',
   styleUrls: ['./client.component.scss']
 })
-export class ClientComponent {
+export class ClientComponent implements OnInit{
   private fb = inject(FormBuilder);
+  activatedRoute = inject(ActivatedRoute);
+  userId: number = 0;
+  authService = inject(AuthService);
+  errorMsg = '';
+  router= inject(Router);
+  clientInfo:any = null;
+
+
+  ngOnInit():void{
+    this.activatedRoute.params.subscribe(params => {
+    this.userId= Number(params['id']);
+    const tokenInfo = this.authService.getPayload();
+    if(Number(tokenInfo.id) !== this.userId){
+      alert('No tienes permiso para ver esta página.');
+      this.router.navigate(['/login']);
+    return;
+    }
+});
+
+
+  }
 
   // Datos de ejemplo de una reserva
   reserva = {

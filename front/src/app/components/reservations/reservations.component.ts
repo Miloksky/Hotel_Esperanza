@@ -62,7 +62,7 @@ export class ReservationsComponent implements OnInit {
       this.checkOutDate = data.checkOutDate;
       this.guests = Number(data.guests);
 
-      localStorage.removeItem('pendingReservation');
+     
     }
   }
 

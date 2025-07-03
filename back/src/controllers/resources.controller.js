@@ -1,34 +1,29 @@
 const db = require('../config/connection.js');
 
 // Obtener todos los recursos
-exports.getAllResources = (req, res) => {
-  const sql = 'SELECT * FROM resources';
-
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('Error al obtener recursos:', err);
-      return res.status(500).json({ error: 'Error interno del servidor' });
-    }
-
+exports.getAllResources = async (req, res) => {
+  try {
+    const sql = 'SELECT * FROM resources';
+    const [results] = await db.query(sql);
     res.json(results);
-  });
+  } catch (err) {
+    console.error('Error al obtener recursos:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
 // create
-exports.createResource = (req, res) => {
-  const { name, price } = req.body;
-
-  const sql = 'INSERT INTO resources (name, price) VALUES (?, ?)';
-  const values = [name, price];
-
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      console.log(err); 
-      res.status(500).json({ message: 'Error al insertar el recurso' });
-    } else {
-      res.status(201).json({ message: 'Recurso creado', id: result.insertId });
-    }
-  });
+exports.createResource = async (req, res) => {
+  try {
+    const { name, price } = req.body;
+    const sql = 'INSERT INTO resources (name, price) VALUES (?, ?)';
+    const [result] = await db.query(sql, [name, price]);
+    res.status(201).json({ message: 'Recurso creado', id: result.insertId });
+  } catch (err) {
+    console.error('Error al insertar recurso:', err);
+    res.status(500).json({ message: 'Error al insertar el recurso' });
+  }
 };
+
 
 // // Crear un recurso
 // exports.createResource = async (req, res) => {
@@ -68,10 +63,10 @@ exports.deleteResource = async (req, res) => {
 exports.updateResource = async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, price, status } = req.body;
+    const { name, price } = req.body;
 
   const sql = 'UPDATE resources SET name = ?, price = ? WHERE id = ?';
-  const values = [name, price, status, id];
+  const [result] = await db.query(sql, [name, price, id]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Recurso no encontrado' });
