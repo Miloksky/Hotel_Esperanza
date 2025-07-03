@@ -45,7 +45,7 @@ exports.deleteResource = async (req, res) => {
   }
 };
 
-// Actualizar un recurso
+
 // Actualizar un recurso
 exports.updateResource = async (req, res) => {
   try {
@@ -82,3 +82,6 @@ exports.getResourceById = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
+
+
