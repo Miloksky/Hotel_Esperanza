@@ -7,10 +7,12 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { ReservationsEditComponent } from './components/reservations-edit/reservations-edit.component';
+import { AppComponent } from './app.component';
 
 export const routes: Routes = [
+
   { path: 'home', component: HomeComponent },
-  { path: 'cliente', component: ClientComponent },
+  { path: 'cliente/:id', component: ClientComponent,canActivate: [authGuard] },
   { path: 'reservations',component : ReservationsComponent},
   { path: 'reservations/edit/:id', component: ReservationsEditComponent,canActivate: [authGuard]},
   { path: 'admin', component: AdminComponent },
@@ -18,5 +20,6 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'home' }
-];
+  
+]
 

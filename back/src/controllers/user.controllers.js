@@ -71,7 +71,13 @@ const login = async (req,res) => {
 } 
 
 const getProfile = async (req,res) => {
-    const id = req.userLogin.id;
+    const {id} = req.userLogin;
+    
+     if(Number(id) !== req.userLogin.id && req.userLogin.role !== 'admin'){
+        return res.status(403).json({
+            msg:"no puedes modificar a otros usuarios"
+        });
+    }
 
     const foundUser = await userM.findById(id);
     if(!foundUser){
