@@ -31,4 +31,5 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token'); //cerrar sesion para implementarlo en el nav bar
   }
+  
 }

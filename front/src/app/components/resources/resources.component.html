@@ -1,0 +1,57 @@
+<div class="resources-container">
+<h2>Crear nuevo recurso</h2>
+<form (ngSubmit)="createResource()" #resourceForm="ngForm">
+  <label>
+    Nombre:
+    <input type="text" name="name" [(ngModel)]="newResource.name" required />
+  </label>
+  <br />
+  <label>
+    Precio:
+    <input type="number" name="price" [(ngModel)]="newResource.price" required />
+  </label>
+  <br />
+  <button type="submit" [disabled]="resourceForm.invalid">Crear</button>
+</form>
+
+<hr />
+
+<h2>Lista de recursos</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Precio</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+<tr *ngFor="let resource of resources">
+  <td>
+    <ng-container *ngIf="editedResource?.id === resource.id; else showName">
+      <input [(ngModel)]="editedResource.name" />
+    </ng-container>
+    <ng-template #showName>{{ resource.name }}</ng-template>
+  </td>
+  <td>
+    <ng-container *ngIf="editedResource?.id === resource.id; else showPrice">
+      <input type="number" [(ngModel)]="editedResource.price" />
+    </ng-container>
+    <ng-template #showPrice>{{ resource.price }}</ng-template>
+  </td>
+  <td>
+    <ng-container *ngIf="editedResource?.id === resource.id; else actionButtons">
+      <button (click)="updateResource()">Guardar</button>
+      <button (click)="cancelEdit()">Cancelar</button>
+    </ng-container>
+    <ng-template #actionButtons>
+      <button (click)="editResource(resource)">Editar</button>
+      <button (click)="deleteResource(resource.id)">Eliminar</button>
+    </ng-template>
+  </td>
+</tr>
+
+  </tbody>
+</table>
+
+</div>

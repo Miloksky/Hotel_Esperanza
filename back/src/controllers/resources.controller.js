@@ -15,10 +15,10 @@ exports.getAllResources = (req, res) => {
 };
 // create
 exports.createResource = (req, res) => {
-  const { name, price, status } = req.body;
+  const { name, price } = req.body;
 
   const sql = 'INSERT INTO resources (name, price) VALUES (?, ?)';
-  const values = [name, price, status];
+  const values = [name, price];
 
   db.query(sql, values, (err, result) => {
     if (err) {

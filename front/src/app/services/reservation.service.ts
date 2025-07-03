@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IRoom } from '../interfaces/room.interface';
-import { IReservationResponse } from '../interfaces/reservation-response';
+import { IReservation, IReservationResponse } from '../interfaces/reservation-response';
 import { AuthService } from './auth.service';
 import { IResourceResponse } from '../interfaces/resource.interface';
 
@@ -32,14 +32,13 @@ export class ReservationService {
     );
   }
 
-getRoomResources(roomId: number): Observable<IResourceResponse> {
-  return this.httpClient.get<IResourceResponse>(`${this.API_URL}rooms/getRoomsResources/rooms/${roomId}/resources`);
-}
+  getRoomResources(roomId: number): Observable<IResourceResponse> {
+    return this.httpClient.get<IResourceResponse>(
+      `${this.API_URL}rooms/getRoomsResources/rooms/${roomId}/resources`
+    );
+  }
 
-
-  createRoomReservation(
-    reservationData: any
-  ): Observable<IReservationResponse> {
+  createRoomReservation(reservationData: any): Observable<IReservationResponse> {
     const headers = this.authService.getAuthHeaders();
 
     return this.httpClient.post<IReservationResponse>(
@@ -49,10 +48,21 @@ getRoomResources(roomId: number): Observable<IResourceResponse> {
     );
   }
 
+  getReservationById(id: Number):Observable<{ data: IReservation }> {
+    const headers = this.authService.getAuthHeaders();
+  return this.httpClient.get<{ data: IReservation }>(`${this.API_URL}reservations/getReservation/${id}`, { headers });
+}
+
+ editReservation(reservationId: number, reservationData: any): Observable<IReservationResponse> {
+  const headers = this.authService.getAuthHeaders();
+  return this.httpClient.put<IReservationResponse>(
+    `${this.API_URL}reservations/edit/${reservationId}`,
+    reservationData,
+    { headers }
+  );
+}
+
   getReserva(): Observable<Reserva> {
     return this.httpClient.get<Reserva>(`${this.API_URL}reservas/1`);
   }
-
-
-
 }
