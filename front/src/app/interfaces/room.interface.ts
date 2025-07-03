@@ -3,8 +3,8 @@ export interface IRoom {
   number: string;
   type: string;
   description: string;
-  price: string;    
-  available: number; 
+  price: number;    
+  available: boolean; 
   capacity: number;
   resource_name?: string;   
   resource_price?: number | string; 

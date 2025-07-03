@@ -111,7 +111,7 @@ export class ReservationsComponent implements OnInit {
     const nights = this.calculateNights();
 
     for (let room of this.selectedRoom) {
-      const price = parseFloat(room.price);
+      const price = room.price;
       total += price * nights;
 
       const resourceId = this.selectedResources[room.id];

@@ -1,0 +1,36 @@
+<div class="room-list-container">
+  <h2>Gestión de Habitaciones</h2>
+  <button (click)="createNewRoom()">Crear Nueva Habitación</button>
+  <div *ngIf="isLoading">Cargando habitaciones...</div>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+<table *ngIf="!isLoading && !errorMessage && rooms.length > 0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Número</th>
+      <th>Tipo</th>
+      <th>Precio</th>
+      <th>Disponible</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let room of rooms">
+      <td data-label="ID">{{ room.id }}</td>
+      <td data-label="Número">{{ room.number }}</td>
+      <td data-label="Tipo">{{ room.type }}</td>
+      <td data-label="Precio">{{ room.price | currency:'USD':'symbol':'1.2-2' }}</td>
+      <td data-label="Disponible">{{ room.available ? 'Sí' : 'No' }}</td>
+      <td data-label="Acciones">
+        <button (click)="editRoom(room.id)">Editar</button>
+        <button (click)="deleteRoom(room.id)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+  <div *ngIf="!isLoading && !errorMessage && rooms.length === 0">
+    No hay habitaciones registradas.
+  </div>
+</div>

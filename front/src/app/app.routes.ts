@@ -8,6 +8,9 @@ import { LoginComponent } from './components/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { ReservationsEditComponent } from './components/reservations-edit/reservations-edit.component';
 import { AppComponent } from './app.component';
+import { RoomListComponent } from './components/admin/room-list/room-list.component';
+import { RoomManagementComponent } from './components/admin/room-management/room-management.component';
+
 
 export const routes: Routes = [
 
@@ -24,6 +27,9 @@ export const routes: Routes = [
       import('./components/resources/resources.component').then(m => m.ResourcesComponent),
     canActivate: [authGuard]
   },
+  { path: 'admin/rooms-list', component: RoomListComponent },
+  { path: 'admin/room-management', component: RoomManagementComponent },
+  { path: 'admin/room-management/:id', component: RoomManagementComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'home' }
   

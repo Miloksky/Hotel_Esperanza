@@ -1,6 +1,4 @@
 const Room = require('../models/rooms.models');
-const bcrypt = require("bcrypt");
-const { createToken } = require("../utils/jwt");
 
 // Obtener todas las habitaciones:
 const getAllRooms = async (req, res) => {
@@ -28,48 +26,56 @@ const getRoomById = async (req, res) => {
 };
 
 // Crear una habitación:
-// añadir el middleware 
 const createRoom = async (req, res) => {
-    const { number, type, description, price, available  } = req.body;
-    try {
-        const newRoomId = await Room.createRoomInDb(number, type, description, price, available );
+    const { number, type, description, price, available } = req.body;
+  try {
+        if (!req.userLogin || req.userLogin.role !== 'admin') {
+                return res.status(403).json({ msg: 'No tienes permisos para esta acción' });
+            }
+        if (!number || !type || price === undefined) {
+        return res.status(400).json({ error: 'Faltan campos obligatorios' });
+        }
 
-        if(req.userLogin.role !== 'admin'){
-        return res.status(403).json({
-            msg:"no puedes crear una habitación"
-        });
-    }
+    const newRoomId = await Room.createRoomInDb({
+      number,
+      type,
+      description,
+      price,
+      available
+    });
 
-        res.status(201).json({
-            id: newRoomId,
-            message: 'Habitación creada exitosamente'
-        });
-    } catch (error) {
-        console.error('Error al crear la habitación:', error);
-        res.status(500).json({ error: 'Error interno del servidor al crear la habitación' });
+    return res.status(201).json({
+      id: newRoomId,
+      message: 'Habitación creada exitosamente'
+    });
+  } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ error: 'Número de habitación ya existente' });
     }
+    console.error('Error en createRoom:', error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
 
 // Actualizar una habitación:
-// añadir el middleware 
 const updateRoom = async (req, res) => {
     const { number, type, description, price, available  } = req.body;
 
-    try {
-        const affectedRows = await Room.updateRoomInDb(req.params.id, number, type, description, price, available );
 
-        if(req.userLogin.role !== 'admin'){
-        return res.status(403).json({
-            msg:"no puedes modificar esta habitación"
-        });
-    }
+    try {
+        if (!req.userLogin || req.userLogin.role !== 'admin') {
+            return res.status(403).json({ msg: 'No tienes permisos para esta acción' });
+        }
+     console.log('*** Rol de administrador verificado. Procediendo con la actualización.');
+
+        const affectedRows = await Room.updateRoomInDb(req.params.id, number, type, description, price, available );
 
         if (affectedRows === 0) {
             return res.status(404).json({ error: 'Habitación no encontrada para actualizar' });
         }
         res.json({ message: 'Habitación actualizada exitosamente' });
     } catch (error) {
-        console.error('Error al actualizar la habitación:', error);
+        console.error('*** Error en updateRoom controller:', error);
         res.status(500).json({ error: 'Error interno del servidor al actualizar la habitación' });
     }
 };

@@ -13,14 +13,20 @@ class Room {
     }
 
     static async createRoomInDb(number, type, description, price, available) {
-        const isAvailable = (typeof available === 'boolean') ? available : (available === 'true' || available === undefined || available === null);
-
+    const isAvailable = (typeof available === 'boolean') ? available : (available === 'true' || available === undefined || available === null);
+    console.log('*** createRoomInDb: Preparando inserción con valores:', { number, type, description, price, isAvailable });
+    try {
         const [result] = await db.query(
             'INSERT INTO rooms (number, type, description, price, available) VALUES (?, ?, ?, ?, ?)',
             [number, type, description, price, isAvailable]
         );
+        console.log('*** createRoomInDb: Resultado de la consulta:', result);
         return result.insertId;
+    } catch (error) {
+        console.error('*** createRoomInDb: Error al ejecutar la consulta SQL:', error);
+        throw error;
     }
+}
 
     static async updateRoomInDb(id, number, type, description, price, available) {
         const isAvailable = (typeof available === 'boolean') ? available : (available === 'true' || available === undefined || available === null);

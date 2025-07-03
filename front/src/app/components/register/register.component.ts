@@ -119,7 +119,7 @@ togglePasswordVisibility(): void {
         console.log('successMessage establecido a:', this.successMessage);
         setTimeout(() => {
           console.log('Iniciando redirección...');
-          this.router.navigate(['/home']);
+          this.router.navigate(['/login']);
         }, 3000);
       },
       error => {

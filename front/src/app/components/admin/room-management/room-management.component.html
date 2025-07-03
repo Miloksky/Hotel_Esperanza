@@ -1,0 +1,48 @@
+<div class="room-management-container">
+  <h2>{{ isEditMode ? 'Editar Habitación' : 'Crear Nueva Habitación' }}</h2>
+
+  <form [formGroup]="roomForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="number">Número de Habitación:</label>
+      <input id="number" type="number" formControlName="number">
+      <div *ngIf="roomForm.get('number')?.invalid && (roomForm.get('number')?.dirty || roomForm.get('number')?.touched)" class="error-message">
+        El número de habitación es requerido y debe ser un número positivo.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="type">Tipo:</label>
+      <input id="type" type="text" formControlName="type">
+      <div *ngIf="roomForm.get('type')?.invalid && (roomForm.get('type')?.dirty || roomForm.get('type')?.touched)" class="error-message">
+        El tipo es requerido.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Descripción:</label>
+      <textarea id="description" formControlName="description"></textarea>
+      <div *ngIf="roomForm.get('description')?.invalid && (roomForm.get('description')?.dirty || roomForm.get('description')?.touched)" class="error-message">
+        La descripción es requerida.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Precio:</label>
+      <input id="price" type="number" formControlName="price">
+      <div *ngIf="roomForm.get('price')?.invalid && (roomForm.get('price')?.dirty || roomForm.get('price')?.touched)" class="error-message">
+        El precio es requerido y debe ser un número positivo.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="available">Disponible:</label>
+      <input id="available" type="checkbox" formControlName="available">
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="roomForm.invalid">Guardar</button>
+      <button type="button" (click)="onCancel()">Cancelar</button>
+    </div>
+  </form>
+</div>
