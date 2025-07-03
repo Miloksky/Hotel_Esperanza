@@ -88,7 +88,7 @@ export class LoginComponent {
     this.authService.login({ email, password }).subscribe({
       next: (response: any) => {
         console.log('Login exitoso', response);
-        localStorage.setItem('token', response);
+        localStorage.setItem('token', response.token);
 
         // Redirección basada en reservationInfo
         const hasReservationInfo = localStorage.getItem('reservationInfo');
