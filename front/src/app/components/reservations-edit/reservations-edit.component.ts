@@ -60,12 +60,17 @@ export class ReservationsEditComponent implements OnInit {
   loadClientReservation(id: number) {
     this.reservationService.getReservationById(id).subscribe({
       next: (response) => {
+            console.log('Respuesta del backend:', response);
+
         if (response && response.data) {
           const res = response.data;
           this.selectedRoom = res.rooms || [];
           this.checkInDate = res.checkInDate.substring(0, 10);
           this.checkOutDate = res.checkOutDate.substring(0, 10);
           this.guests = res.guests;
+          for (let room of this.selectedRoom) {
+          this.editSelectedResources[room.id] = Number(room.resource_id) || null;
+        }
         }
       },
       error: () => {
@@ -184,7 +189,7 @@ getTotalCapacity(): number {
       number: room.number,
       start_date: this.editCheckInDate,
       end_date: this.editCheckOutDate,
-      resource_id: this.editSelectedResources[room.id],
+      resource_id: this.editSelectedResources[room.id] || null,
     })),
   };
 
@@ -218,6 +223,36 @@ getTotalCapacity(): number {
       const subtotal = Number(this.selectedRoom[i].subtotal) || 0;
       total += subtotal;
     }
+    return total;
+  }
+
+
+  calculateNights(): number {
+    const checkIn = new Date(this.checkInDate);
+    const checkOut = new Date(this.checkOutDate);
+    const nigths = checkOut.getTime() - checkIn.getTime();
+    return Math.ceil(nigths / (1000 * 60 * 60 * 24));
+  }
+
+  calculateNewTotal(): number {
+    let total = 0;
+    const nights = this.calculateNights();
+
+    for (let room of this.editRooms) {
+      const price = parseFloat(room.price);
+      total += price * nights;
+
+      const resourceId = this.editSelectedResources[room.id];
+      const resources = this.roomResources[room.id];
+
+      if (resources && resourceId) {
+        const resource = resources.find((r) => r.id === resourceId);
+        if (resource) {
+          total += resource.price * nights;
+        }
+      }
+    }
+
     return total;
   }
 

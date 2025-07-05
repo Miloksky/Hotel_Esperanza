@@ -186,7 +186,7 @@ const editReservation = async (req, res) => {
         return res.status(404).json({ msg: "La habitación no existe" });
       }
       const { id: room_id, price: room_price } = roomInfo;
-
+      console.log(room)
       let resourcePrice = 0;
       if (room.resource_id !== null) {
         resourcePrice = await reservationsM.findResourcePriceById(room.resource_id);
@@ -264,6 +264,7 @@ const editReservation = async (req, res) => {
       msg: "Reserva actualizada",
     });
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       error,
     });
@@ -330,6 +331,8 @@ const getReservationById = async (req, res) => {
       return res.status(404).json({ success: false, msg: "No encontrada" });
     }
     const rooms = await reservationsM.getRoomsByReservationId(id);
+    console.log("reservation:", reservation);
+    console.log("rooms:", rooms);
     res.json({
       success: true,
       data: {
@@ -343,7 +346,8 @@ const getReservationById = async (req, res) => {
     
      
   } catch (error) {
-    res.status(500).json({ success: false, error });
+    console.log('Error en getReservationById:', error); 
+    res.status(500).json({ success: false, msg: error });
   }
 };
 

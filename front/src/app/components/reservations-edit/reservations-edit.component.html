@@ -147,7 +147,7 @@
       <p><strong>Hasta:</strong> {{ editCheckOutDate }}</p>
       <p><strong>Huéspedes:</strong> {{ editGuests }}</p>
       <p><strong>Capacidad total:</strong> {{ getTotalCapacity() }}</p>
-      <p><strong>Total:</strong> {{ totalOfReservation() }} €</p>
+      <p><strong>Total:</strong> {{ calculateNewTotal()}} €</p>
 
       <!-- Error si capacidad < huéspedes -->
       @if (getTotalCapacity() < editGuests) { <p style="color: red">

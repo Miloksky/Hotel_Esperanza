@@ -129,6 +129,7 @@ export class ReservationsComponent implements OnInit {
   }
 
   confirmReservation() {
+    
     if (!this.selectedRoom.length) return;
 
     if (this.getTotalCapacity() < this.guests) {
